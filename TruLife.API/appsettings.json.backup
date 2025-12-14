@@ -1,0 +1,23 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning",
+      "Microsoft.EntityFrameworkCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=trulife.db"
+  },
+  "Jwt": {
+    "Key": "your-super-secret-jwt-key-minimum-32-characters-long-change-this",
+    "Secret": "your-super-secret-jwt-key-minimum-32-characters-long-change-this",
+    "Issuer": "TruLifeAPI",
+    "Audience": "TruLifeClient",
+    "ExpiryMinutes": 1440
+  },
+  "Gemini": {
+    "ApiKey": "YOUR_GEMINI_API_KEY_HERE"
+  }
+}
