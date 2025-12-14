@@ -1,0 +1,6 @@
+@TruLife.API_HostAddress = http://localhost:5198
+
+GET {{TruLife.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
