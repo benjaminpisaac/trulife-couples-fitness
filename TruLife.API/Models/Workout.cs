@@ -34,10 +34,24 @@ namespace TruLife.API.Models
         public string? Description { get; set; }
         public int DurationWeeks { get; set; }
         public string? SplitType { get; set; } // "PPL", "Upper/Lower", "Full Body", etc.
+        public DateTime StartDate { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
         
         public ICollection<WorkoutSession> Sessions { get; set; } = new List<WorkoutSession>();
+        public ICollection<ProgramWeek> Weeks { get; set; } = new List<ProgramWeek>();
+    }
+    
+    public class ProgramWeek
+    {
+        [Key]
+        public int Id { get; set; }
+        
+        public int WorkoutProgramId { get; set; }
+        public WorkoutProgram WorkoutProgram { get; set; } = null!;
+        
+        public int WeekNumber { get; set; }
+        public string? WorkoutPlan { get; set; } // JSON with daily workouts
     }
     
     public class WorkoutSession

@@ -55,6 +55,7 @@ namespace TruLife.API.Models
         
         public DateTime LogDate { get; set; } = DateTime.UtcNow;
         public double WaterIntakeMl { get; set; }
+        public int AmountMl { get; set; } // Alternative name for WaterIntakeMl (int for DTO compatibility)
     }
     
     public class AlcoholLog

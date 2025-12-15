@@ -14,12 +14,17 @@ namespace TruLife.API.Models
         [MaxLength(200)]
         public string TestName { get; set; } = string.Empty;
         
+        [MaxLength(200)]
+        public string? LabName { get; set; }
+        
         public DateTime TestDate { get; set; }
         public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
         
         public string? PdfUrl { get; set; } // URL to uploaded PDF
+        public string? FileUrl { get; set; } // Alternative name for PdfUrl
         public bool IsProcessed { get; set; } = false;
         public string? AIInsights { get; set; } // JSON with AI analysis
+        public string? AIRecommendations { get; set; } // AI recommendations text
         
         public ICollection<Biomarker> Biomarkers { get; set; } = new List<Biomarker>();
     }
@@ -41,6 +46,7 @@ namespace TruLife.API.Models
         
         public double? ReferenceRangeMin { get; set; }
         public double? ReferenceRangeMax { get; set; }
+        public string? ReferenceRange { get; set; } // Formatted range string for DTO
         
         public bool IsAbnormal { get; set; } = false;
         public string? Status { get; set; } // "Normal", "High", "Low", "Critical"
@@ -60,12 +66,16 @@ namespace TruLife.API.Models
         public string TestProvider { get; set; } = string.Empty; // "23andMe", "AncestryDNA", etc.
         
         public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UploadDate { get; set; } = DateTime.UtcNow; // Alternative name
         public string? RawDataUrl { get; set; } // URL to raw DNA file
+        public string? FileUrl { get; set; } // Alternative name for RawDataUrl
         
         public bool IsProcessed { get; set; } = false;
         public string? AIInsights { get; set; } // JSON with overall health insights
+        public string? AIRecommendations { get; set; } // AI recommendations text
         
         public ICollection<SNPInterpretation> SNPs { get; set; } = new List<SNPInterpretation>();
+        public ICollection<SNPInterpretation> SNPInterpretations { get; set; } = new List<SNPInterpretation>(); // Alternative name for SNPs
     }
     
     public class SNPInterpretation
@@ -87,6 +97,8 @@ namespace TruLife.API.Models
         public string? HealthTrait { get; set; } // "Caffeine Metabolism", "Vitamin D Absorption", etc.
         
         public string? Impact { get; set; } // "Positive", "Neutral", "Negative"
+        public string? Interpretation { get; set; } // Interpretation text for DTO
         public string? AIRecommendation { get; set; }
+        public string? Recommendations { get; set; } // Alternative name for AIRecommendation
     }
 }

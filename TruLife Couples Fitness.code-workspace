@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../tru-life-fitness-copy-c9348ef7"
+		}
+	],
+	"settings": {
+		"powershell.cwd": "TruLife Couples Fitness"
+	}
+}
