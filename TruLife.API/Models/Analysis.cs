@@ -74,8 +74,11 @@ namespace TruLife.API.Models
         public string? AIInsights { get; set; } // JSON with overall health insights
         public string? AIRecommendations { get; set; } // AI recommendations text
         
+        
         public ICollection<SNPInterpretation> SNPs { get; set; } = new List<SNPInterpretation>();
-        public ICollection<SNPInterpretation> SNPInterpretations { get; set; } = new List<SNPInterpretation>(); // Alternative name for SNPs
+        
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public ICollection<SNPInterpretation> SNPInterpretations => SNPs; // Alternative name for SNPs
     }
     
     public class SNPInterpretation
