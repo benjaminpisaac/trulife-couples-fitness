@@ -1,0 +1,11 @@
+{
+    "routes": [],
+    "navigationFallback": {
+        "rewrite": "/index.html"
+    },
+    "platform": {
+        "apiRuntime": "dotnet:8.0"
+    },
+    "appBuildCommand": "npm install --legacy-peer-deps && npm run build",
+    "apiBuildCommand": "dotnet publish -c Release -o published"
+}
