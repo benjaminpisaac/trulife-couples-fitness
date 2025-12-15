@@ -29,12 +29,23 @@ namespace TruLife.API.Controllers
                 return BadRequest(new { message = "Email already registered" });
             }
             
+            // Handle both name formats
+            string firstName = request.FirstName;
+            string lastName = request.LastName;
+            
+            if (string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(request.Name))
+            {
+                var nameParts = request.Name.Split(' ', 2);
+                firstName = nameParts[0];
+                lastName = nameParts.Length > 1 ? nameParts[1] : "";
+            }
+            
             // Create user
             var user = new User
             {
                 Email = request.Email,
-                FirstName = request.FirstName,
-                LastName = request.LastName
+                FirstName = firstName,
+                LastName = lastName
             };
             
             user.PasswordHash = _authService.HashPassword(user, request.Password);
