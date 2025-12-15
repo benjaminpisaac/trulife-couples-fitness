@@ -178,9 +178,21 @@ namespace TruLife.API.Data
             modelBuilder.Entity<MealLog>()
                 .HasIndex(m => new { m.UserId, m.LogDate });
             
+            
             modelBuilder.Entity<CoupleProfile>()
                 .HasIndex(cp => new { cp.PartnerAId, cp.PartnerBId })
                 .IsUnique();
+            
+            // DNAAnalysis - SNPInterpretation relationship
+            modelBuilder.Entity<DNAAnalysis>()
+                .HasMany(d => d.SNPs)
+                .WithOne()
+                .HasForeignKey("DNAAnalysisId")
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            // Ignore the SNPInterpretations property (it's just an alias)
+            modelBuilder.Entity<DNAAnalysis>()
+                .Ignore(d => d.SNPInterpretations);
         }
     }
 }
