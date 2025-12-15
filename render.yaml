@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: trulife-api
+    runtime: dotnet
+    region: oregon
+    plan: free
+    rootDir: TruLife.API
+    buildCommand: dotnet publish -c Release -o out
+    startCommand: dotnet out/TruLife.API.dll
+    envVars:
+      - key: ASPNETCORE_URLS
+        value: http://0.0.0.0:$PORT
+      - key: JWT_KEY
+        value: TruLife-Super-Secret-JWT-Key-For-Development-Minimum-32-Characters-Long-2024
+      - key: JWT_SECRET
+        value: TruLife-Super-Secret-JWT-Key-For-Development-Minimum-32-Characters-Long-2024
+      - key: GEMINI_API_KEY
+        generateValue: true
