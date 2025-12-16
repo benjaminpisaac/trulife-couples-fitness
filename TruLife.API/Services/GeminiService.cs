@@ -16,8 +16,16 @@ namespace TruLife.API.Services
         
         public async Task<string> AnalyzeEquipmentFromPhoto(string base64Image)
         {
-            var prompt = @"Analyze this gym/workout environment photo and identify all available equipment. 
-Return a JSON array of equipment names. Be specific (e.g., 'Barbell', 'Dumbbells', 'Pull-up Bar', 'Resistance Bands', 'Bench', 'Squat Rack', etc.).
+            var prompt = @"Analyze this photo and identify all available workout equipment and exercise opportunities. 
+This could be a gym, bedroom, park, kitchen, outdoor area, or any space.
+Look for:
+- Traditional gym equipment (dumbbells, barbells, benches, machines, etc.)
+- Household items usable for exercise (chairs, stairs, walls, counters, etc.)
+- Outdoor features (benches, bars, hills, open space, etc.)
+- Bodyweight exercise opportunities (floor space, sturdy furniture, etc.)
+
+Return a JSON array of equipment/exercise options. Be specific and creative.
+Examples: 'Dumbbells', 'Park Bench', 'Stairs', 'Open Floor Space', 'Kitchen Counter (for push-ups)', 'Tree Branch (for pull-ups)', 'Hill (for sprints)', etc.
 Only return the JSON array, no additional text.";
             
             return await CallGeminiVision(prompt, base64Image);
@@ -464,6 +472,19 @@ Only return the JSON object, no additional text.";
                 .GetString();
             
             return text ?? string.Empty;
+        }
+        
+        public async Task<T?> GenerateContentAsync<T>(string prompt) where T : class
+        {
+            try
+            {
+                var jsonResponse = await CallGeminiText(prompt);
+                return JsonSerializer.Deserialize<T>(jsonResponse);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

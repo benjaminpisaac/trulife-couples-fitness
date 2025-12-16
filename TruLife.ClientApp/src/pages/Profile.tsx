@@ -9,6 +9,7 @@ const Profile = () => {
     const [editing, setEditing] = useState(false);
     const [formData, setFormData] = useState<any>({});
     const [loading, setLoading] = useState(true);
+    const [measurementSystem, setMeasurementSystem] = useState<'imperial' | 'metric'>('imperial'); // Default to imperial (US)
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -28,7 +29,7 @@ const Profile = () => {
         }
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -92,39 +93,116 @@ const Profile = () => {
                     {editing ? (
                         <form onSubmit={handleSubmit}>
                             <div className="form-group">
-                                <label className="label">Height (cm)</label>
-                                <input
-                                    type="number"
-                                    name="heightCm"
+                                <label className="label">Measurement System</label>
+                                <select
                                     className="input"
-                                    value={formData.heightCm || ''}
-                                    onChange={handleChange}
-                                    placeholder="170"
-                                />
+                                    value={measurementSystem}
+                                    onChange={(e) => setMeasurementSystem(e.target.value as 'imperial' | 'metric')}
+                                >
+                                    <option value="imperial">Imperial (ft/in, lbs)</option>
+                                    <option value="metric">Metric (cm, kg)</option>
+                                </select>
                             </div>
 
                             <div className="form-group">
-                                <label className="label">Current Weight (kg)</label>
+                                <label className="label">
+                                    Height {measurementSystem === 'imperial' ? '(ft/in)' : '(cm)'}
+                                </label>
+                                {measurementSystem === 'imperial' ? (
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <input
+                                            type="number"
+                                            className="input"
+                                            value={Math.floor((formData.heightCm || 0) / 30.48)}
+                                            onChange={(e) => {
+                                                const feet = parseInt(e.target.value) || 0;
+                                                const inches = Math.round(((formData.heightCm || 0) / 2.54) % 12);
+                                                setFormData({
+                                                    ...formData,
+                                                    heightCm: (feet * 30.48) + (inches * 2.54)
+                                                });
+                                            }}
+                                            placeholder="5"
+                                            min="0"
+                                            max="8"
+                                        />
+                                        <span style={{ alignSelf: 'center', fontWeight: 600 }}>ft</span>
+                                        <input
+                                            type="number"
+                                            className="input"
+                                            value={Math.round(((formData.heightCm || 0) / 2.54) % 12)}
+                                            onChange={(e) => {
+                                                const feet = Math.floor((formData.heightCm || 0) / 30.48);
+                                                const inches = parseInt(e.target.value) || 0;
+                                                setFormData({
+                                                    ...formData,
+                                                    heightCm: (feet * 30.48) + (inches * 2.54)
+                                                });
+                                            }}
+                                            placeholder="8"
+                                            min="0"
+                                            max="11"
+                                        />
+                                        <span style={{ alignSelf: 'center', fontWeight: 600 }}>in</span>
+                                    </div>
+                                ) : (
+                                    <input
+                                        type="number"
+                                        name="heightCm"
+                                        className="input"
+                                        value={formData.heightCm || ''}
+                                        onChange={handleChange}
+                                        placeholder="170"
+                                    />
+                                )}
+                            </div>
+
+                            <div className="form-group">
+                                <label className="label">
+                                    Current Weight {measurementSystem === 'imperial' ? '(lbs)' : '(kg)'}
+                                </label>
                                 <input
                                     type="number"
                                     name="currentWeightKg"
                                     className="input"
-                                    value={formData.currentWeightKg || ''}
-                                    onChange={handleChange}
-                                    placeholder="70"
+                                    value={
+                                        measurementSystem === 'imperial'
+                                            ? (formData.currentWeightKg * 2.20462).toFixed(1)
+                                            : formData.currentWeightKg || ''
+                                    }
+                                    onChange={(e) => {
+                                        const value = parseFloat(e.target.value);
+                                        setFormData({
+                                            ...formData,
+                                            currentWeightKg: measurementSystem === 'imperial' ? value / 2.20462 : value
+                                        });
+                                    }}
+                                    placeholder={measurementSystem === 'imperial' ? '154' : '70'}
                                     step="0.1"
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label className="label">Target Weight (kg)</label>
+                                <label className="label">
+                                    Target Weight {measurementSystem === 'imperial' ? '(lbs)' : '(kg)'}
+                                </label>
                                 <input
                                     type="number"
                                     name="targetWeightKg"
                                     className="input"
-                                    value={formData.targetWeightKg || ''}
-                                    onChange={handleChange}
-                                    placeholder="65"
+                                    value={
+                                        measurementSystem === 'imperial'
+                                            ? (formData.targetWeightKg * 2.20462).toFixed(1)
+                                            : formData.targetWeightKg || ''
+                                    }
+                                    onChange={(e) => {
+                                        const value = parseFloat(e.target.value);
+                                        setFormData({
+                                            ...formData,
+                                            targetWeightKg: measurementSystem === 'imperial' ? value / 2.20462 : value
+                                        });
+                                    }}
+                                    placeholder={measurementSystem === 'imperial' ? '143' : '65'}
                                     step="0.1"
                                 />
                             </div>
@@ -176,6 +254,64 @@ const Profile = () => {
                                 <p className="text-gray text-sm mt-1">Separate multiple preferences with commas</p>
                             </div>
 
+                            {/* Medical & Personal Data Section */}
+                            <div style={{ borderTop: '2px solid #e5e7eb', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', color: '#374151' }}>
+                                    📋 Medical & Personal Information (Optional)
+                                </h3>
+                                <p className="text-gray text-sm mb-3">
+                                    This information helps personalize your experience without DNA or lab data
+                                </p>
+
+                                <div className="form-group">
+                                    <label className="label">Ethnicity</label>
+                                    <input
+                                        type="text"
+                                        name="ethnicity"
+                                        className="input"
+                                        value={formData.ethnicity || ''}
+                                        onChange={handleChange}
+                                        placeholder="e.g., African American, Hispanic, Asian, etc."
+                                    />
+                                    <p className="text-gray text-sm mt-1">Helps with culturally-relevant meal recommendations</p>
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="label">Medical Conditions</label>
+                                    <textarea
+                                        name="medicalConditions"
+                                        className="input"
+                                        value={formData.medicalConditions || ''}
+                                        onChange={handleChange}
+                                        placeholder="e.g., Diabetes, Hypertension, Thyroid issues, etc."
+                                        rows={3}
+                                        style={{ resize: 'vertical' }}
+                                    />
+                                    <p className="text-gray text-sm mt-1">List any relevant medical conditions (comma-separated)</p>
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="label">Current Medications</label>
+                                    <textarea
+                                        name="medications"
+                                        className="input"
+                                        value={formData.medications || ''}
+                                        onChange={handleChange}
+                                        placeholder="e.g., Metformin, Lisinopril, Levothyroxine, etc."
+                                        rows={3}
+                                        style={{ resize: 'vertical' }}
+                                    />
+                                    <p className="text-gray text-sm mt-1">List current medications (comma-separated)</p>
+                                </div>
+
+                                <div style={{ background: '#fef3c7', borderRadius: '8px', padding: '1rem', marginTop: '1rem' }}>
+                                    <p style={{ fontSize: '0.85rem', color: '#78350f', margin: 0 }}>
+                                        <strong>💡 Note:</strong> This information is optional but helps our AI provide more personalized recommendations.
+                                        DNA and lab data can be added separately for even more precise guidance.
+                                    </p>
+                                </div>
+                            </div>
+
                             <div className="flex gap-2">
                                 <button type="submit" className="btn btn-primary flex-1" disabled={loading}>
                                     {loading ? 'Saving...' : 'Save Changes'}
@@ -217,6 +353,18 @@ const Profile = () => {
                             <div>
                                 <div className="text-gray text-sm">Dietary Preferences</div>
                                 <div style={{ fontWeight: 600 }}>{profile?.dietaryPreferences || 'Not set'}</div>
+                            </div>
+                            <div>
+                                <div className="text-gray text-sm">Ethnicity</div>
+                                <div style={{ fontWeight: 600 }}>{profile?.ethnicity || 'Not set'}</div>
+                            </div>
+                            <div>
+                                <div className="text-gray text-sm">Medical Conditions</div>
+                                <div style={{ fontWeight: 600 }}>{profile?.medicalConditions || 'None listed'}</div>
+                            </div>
+                            <div>
+                                <div className="text-gray text-sm">Medications</div>
+                                <div style={{ fontWeight: 600 }}>{profile?.medications || 'None listed'}</div>
                             </div>
                         </div>
                     )}

@@ -1,11 +1,19 @@
 import { useState, useEffect } from 'react';
 import { getCurrentMacros, getTodaysMeals, analyzeMeal, logMeal } from '../services/api';
+import DietaryPreferences from '../components/DietaryPreferences';
+import MealRecommendations from '../components/MealRecommendations';
+import LabFocusedMeals from '../components/LabFocusedMeals';
+import HydrationTracker from '../components/HydrationTracker';
+import MacroCalculator from '../components/MacroCalculator';
+import DNAFocusedMeals from '../components/DNAFocusedMeals';
+import RestaurantFinder from '../components/RestaurantFinder';
 
 const Eat = () => {
     const [mode, setMode] = useState<'individual' | 'couples'>('individual');
     const [macros, setMacros] = useState<any>(null);
     const [meals, setMeals] = useState<any[]>([]);
     const [analyzing, setAnalyzing] = useState(false);
+    const [dietaryPreference, setDietaryPreference] = useState<string>('none');
 
     useEffect(() => {
         fetchData();
@@ -111,7 +119,13 @@ const Eat = () => {
 
                 {mode === 'individual' ? (
                     <>
-                        {/* Macro Progress */}
+                        {/* 1. Dietary Preferences */}
+                        <DietaryPreferences
+                            currentPreference={dietaryPreference}
+                            onSelect={setDietaryPreference}
+                        />
+
+                        {/* 2. Today's Macros */}
                         {macros && (
                             <div className="card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
                                 <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Today's Macros</h2>
@@ -157,26 +171,12 @@ const Eat = () => {
                             </div>
                         )}
 
-                        {/* Photo Upload */}
-                        <div className="card">
-                            <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>📸 Log Meal with AI</h2>
-                            <p className="text-gray mb-3">
-                                Take a photo of your meal and get instant macro estimates!
-                            </p>
-                            <label className="btn btn-primary w-full" style={{ cursor: 'pointer' }}>
-                                {analyzing ? 'Analyzing...' : '📷 Take Photo'}
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    capture="environment"
-                                    onChange={handlePhotoUpload}
-                                    style={{ display: 'none' }}
-                                    disabled={analyzing}
-                                />
-                            </label>
-                        </div>
+                        {/* 3. Macro Calculator */}
+                        {!macros && (
+                            <MacroCalculator onCalculated={() => window.location.reload()} />
+                        )}
 
-                        {/* Today's Meals */}
+                        {/* 4. Today's Meals */}
                         <div className="card">
                             <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Today's Meals</h2>
                             {meals.length === 0 ? (
@@ -198,15 +198,46 @@ const Eat = () => {
                             )}
                         </div>
 
-                        {/* Quick Actions */}
+                        {/* 5. AI Meal Recommendations */}
+                        <MealRecommendations
+                            remainingMacros={remaining || { calories: 0, protein: 0, carbs: 0, fats: 0 }}
+                            dietaryPreference={dietaryPreference}
+                        />
+
+                        {/* 6. Restaurant Finder */}
+                        <RestaurantFinder
+                            targetCalories={remaining?.calories || 600}
+                            targetProtein={remaining?.protein || 30}
+                            dietaryPreference={dietaryPreference}
+                        />
+
+                        {/* 7. Photo Upload */}
                         <div className="card">
-                            <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Quick Actions</h2>
-                            <div className="flex flex-col gap-2">
-                                <button className="btn btn-outline">🤖 Get Meal Recommendations</button>
-                                <button className="btn btn-outline">🍴 Restaurant Mode</button>
-                                <button className="btn btn-outline">📊 Calculate Macros</button>
-                            </div>
+                            <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>📸 Log Meal with AI</h2>
+                            <p className="text-gray mb-3">
+                                Take a photo of your meal and get instant macro estimates!
+                            </p>
+                            <label className="btn btn-primary w-full" style={{ cursor: 'pointer' }}>
+                                {analyzing ? 'Analyzing...' : '📷 Take Photo'}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    capture="environment"
+                                    onChange={handlePhotoUpload}
+                                    style={{ display: 'none' }}
+                                    disabled={analyzing}
+                                />
+                            </label>
                         </div>
+
+                        {/* 8. Hydration Tracker */}
+                        <HydrationTracker />
+
+                        {/* 9. DNA-Focused Foods */}
+                        <DNAFocusedMeals />
+
+                        {/* 10. Lab-Focused Foods */}
+                        <LabFocusedMeals />
                     </>
                 ) : (
                     <div className="card">

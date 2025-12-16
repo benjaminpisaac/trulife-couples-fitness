@@ -9,6 +9,7 @@ interface AuthState {
         lastName: string;
     } | null;
     token: string | null;
+    isLoading: boolean;
 }
 
 const token = localStorage.getItem('token');
@@ -18,6 +19,7 @@ const initialState: AuthState = {
     isAuthenticated: !!token,
     user: userStr ? JSON.parse(userStr) : null,
     token: token,
+    isLoading: false,
 };
 
 const authSlice = createSlice({

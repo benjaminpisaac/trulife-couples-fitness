@@ -43,6 +43,24 @@ namespace TruLife.API.Controllers
             }
         }
         
+        [HttpPost("analyze-equipment")]
+        public async Task<ActionResult> AnalyzeEquipment([FromBody] AnalyzeEquipmentRequest request)
+        {
+            var userId = _authService.GetUserIdFromToken(User);
+            if (userId == null) return Unauthorized();
+            
+            try
+            {
+                var equipmentJson = await _geminiService.AnalyzeEquipmentFromPhoto(request.Base64Image);
+                
+                return Ok(new { equipment = equipmentJson });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Failed to analyze equipment", error = ex.Message });
+            }
+        }
+        
         [HttpPost("generate")]
         public async Task<ActionResult> GenerateWorkout(GenerateWorkoutRequest request)
         {

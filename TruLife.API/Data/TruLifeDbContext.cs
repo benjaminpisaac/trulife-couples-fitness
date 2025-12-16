@@ -46,6 +46,7 @@ namespace TruLife.API.Data
         public DbSet<Biomarker> Biomarkers { get; set; }
         public DbSet<DNAAnalysis> DNAAnalyses { get; set; }
         public DbSet<SNPInterpretation> SNPInterpretations { get; set; }
+        public DbSet<GeneticProfile> GeneticProfiles { get; set; }
         
         // Progress & Settings
         public DbSet<ProgressPhoto> ProgressPhotos { get; set; }

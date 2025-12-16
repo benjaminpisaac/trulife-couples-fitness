@@ -59,3 +59,25 @@ export const generateRomanticEvening = (data: any) =>
 export const getRomanticEvenings = () => api.get('/couples/romantic-evenings');
 
 export default api;
+
+// DNA Analysis
+export const uploadDNA = (formData: FormData) => api.post('/genetics/upload', formData, {
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    },
+});
+
+export const getGeneticProfile = () => api.get('/genetics/profile');
+
+// Lab Analysis
+export const uploadLabResult = (formData: FormData) => api.post('/labs/upload', formData, {
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    },
+});
+
+export const getLabResults = () => api.get('/labs');
+
+// Equipment Analysis
+export const analyzeEquipment = (base64Image: string) =>
+    api.post('/workout/analyze-equipment', { base64Image });

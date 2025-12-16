@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { getProfile, getLatestReadiness } from '../services/api';
+import ReadinessCheckIn from '../components/ReadinessCheckIn';
 
 const Dashboard = () => {
     const user = useSelector((state: RootState) => state.auth.user);
@@ -66,6 +67,11 @@ const Dashboard = () => {
                             </div>
                         </div>
                     </div>
+                )}
+
+                {/* Readiness Check-In */}
+                {!readiness && (
+                    <ReadinessCheckIn onComplete={() => window.location.reload()} />
                 )}
 
                 {/* Quick Actions */}

@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { generateWorkout, createWorkoutSession } from '../services/api';
+import { generateWorkout, createWorkoutSession, analyzeEquipment } from '../services/api';
 
 const Train = () => {
     const [mode, setMode] = useState<'individual' | 'couples'>('individual');
     const [generatedWorkout, setGeneratedWorkout] = useState<any>(null);
     const [loading, setLoading] = useState(false);
+    const [detectedEquipment, setDetectedEquipment] = useState<string[]>([]);
 
     const handleGenerateWorkout = async () => {
         setLoading(true);
@@ -42,6 +43,37 @@ const Train = () => {
         }
     };
 
+    const handleEquipmentPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setLoading(true);
+        try {
+            // Convert image to base64
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                const base64 = reader.result as string;
+                const base64Image = base64.split(',')[1]; // Remove data:image/jpeg;base64, prefix
+
+                try {
+                    const response = await analyzeEquipment(base64Image);
+                    const equipmentList = JSON.parse(response.data.equipment);
+                    setDetectedEquipment(equipmentList);
+                } catch (error) {
+                    console.error('Error analyzing equipment:', error);
+                    alert('Failed to analyze equipment. Please try again.');
+                } finally {
+                    setLoading(false);
+                }
+            };
+            reader.readAsDataURL(file);
+        } catch (error) {
+            console.error('Error reading file:', error);
+            alert('Failed to read image. Please try again.');
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="page">
             <div className="page-header">
@@ -70,7 +102,61 @@ const Train = () => {
 
                 {mode === 'individual' ? (
                     <>
-                        {/* Generate Workout */}
+                        {/* 1. Equipment Scanner */}
+                        <div className="card">
+                            <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>📸 Scan Your Space</h2>
+                            <p className="text-gray mb-3">
+                                Take a photo of any area - gym, bedroom, park, kitchen - to detect available workout equipment and bodyweight exercise options.
+                            </p>
+
+                            <input
+                                type="file"
+                                accept="image/*"
+                                capture="environment"
+                                style={{ display: 'none' }}
+                                id="equipment-camera"
+                                onChange={handleEquipmentPhoto}
+                            />
+
+                            <div className="flex gap-2">
+                                <button
+                                    className="btn btn-outline flex-1"
+                                    onClick={() => document.getElementById('equipment-camera')?.click()}
+                                    disabled={loading}
+                                >
+                                    📷 Take Photo
+                                </button>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                    id="equipment-upload"
+                                    onChange={handleEquipmentPhoto}
+                                />
+                                <button
+                                    className="btn btn-outline flex-1"
+                                    onClick={() => document.getElementById('equipment-upload')?.click()}
+                                    disabled={loading}
+                                >
+                                    📁 Upload Photo
+                                </button>
+                            </div>
+
+                            {detectedEquipment.length > 0 && (
+                                <div style={{ marginTop: '1rem', padding: '1rem', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #86efac' }}>
+                                    <div style={{ fontWeight: 600, marginBottom: '0.5rem', color: '#166534' }}>✅ Detected Equipment:</div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {detectedEquipment.map((item, index) => (
+                                            <span key={index} style={{ padding: '0.25rem 0.75rem', background: 'white', borderRadius: '16px', fontSize: '0.875rem', border: '1px solid #86efac' }}>
+                                                {item}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* 2. Generate Workout */}
                         <div className="card">
                             <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Generate AI Workout</h2>
                             <p className="text-gray mb-3">
@@ -85,7 +171,7 @@ const Train = () => {
                             </button>
                         </div>
 
-                        {/* Generated Workout Display */}
+                        {/* 3. Generated Workout Display */}
                         {generatedWorkout && (
                             <div className="card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
                                 <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{generatedWorkout.workoutName}</h2>
@@ -129,14 +215,10 @@ const Train = () => {
                             </div>
                         )}
 
-                        {/* Quick Tips */}
+                        {/* 4. Training Tips */}
                         <div className="card">
                             <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Training Tips</h2>
                             <div className="flex flex-col gap-2">
-                                <div style={{ padding: '0.75rem', background: '#f3f4f6', borderRadius: '8px' }}>
-                                    <div style={{ fontWeight: 600 }}>📸 Scan Your Gym</div>
-                                    <div className="text-gray text-sm">Take a photo of your gym to detect available equipment</div>
-                                </div>
                                 <div style={{ padding: '0.75rem', background: '#f3f4f6', borderRadius: '8px' }}>
                                     <div style={{ fontWeight: 600 }}>📊 Track Readiness</div>
                                     <div className="text-gray text-sm">Log daily readiness for optimized workout intensity</div>

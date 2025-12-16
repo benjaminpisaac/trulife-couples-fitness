@@ -261,4 +261,74 @@ namespace TruLife.API.DTOs
     {
         public bool Approved { get; set; }
     }
+
+    // DNA Analysis DTOs
+    public class SNPExtractionResult
+    {
+        public string? Rs1815739 { get; set; }
+        public string? Rs4340 { get; set; }
+        public string? Rs4253778 { get; set; }
+        public string? Rs9939609 { get; set; }
+        public string? Rs2228570 { get; set; }
+        public string? Rs762551 { get; set; }
+        public string? Rs1801133 { get; set; }
+        public string? Rs12722 { get; set; }
+        public string? Rs1049434 { get; set; }
+    }
+    
+    public class GeneticInterpretationResult
+    {
+        public string TrainingRecommendation { get; set; } = string.Empty;
+        public string NutritionRecommendation { get; set; } = string.Empty;
+        public List<string> SupplementRecommendations { get; set; } = new();
+        public List<string> InjuryRiskFactors { get; set; } = new();
+        public string AnalysisSummary { get; set; } = string.Empty;
+    }
+    
+    public class GeneticProfileResponse
+    {
+        public int Id { get; set; }
+        public DateTime UploadDate { get; set; }
+        public string DataSource { get; set; } = string.Empty;
+        public string? FileUrl { get; set; }
+        public string? Actn3Rs1815739 { get; set; }
+        public string? AceRs4340 { get; set; }
+        public string? PparaRs4253778 { get; set; }
+        public string? FtoRs9939609 { get; set; }
+        public string? VdrRs2228570 { get; set; }
+        public string? Cyp1a2Rs762551 { get; set; }
+        public string? MthfrRs1801133 { get; set; }
+        public string? Col5a1Rs12722 { get; set; }
+        public string? Mct1Rs1049434 { get; set; }
+        public string? TrainingRecommendation { get; set; }
+        public string? NutritionRecommendation { get; set; }
+        public List<string>? SupplementRecommendations { get; set; }
+        public List<string>? InjuryRiskFactors { get; set; }
+        public string? AnalysisSummary { get; set; }
+    }
+
+    // Lab Analysis DTOs
+    public class LabAnalysisResult
+    {
+        public string AnalysisSummary { get; set; } = string.Empty;
+        public string NutritionalRecommendations { get; set; } = string.Empty;
+        public List<string> SupplementRecommendations { get; set; } = new();
+        public List<string> LifestyleRecommendations { get; set; } = new();
+        public List<string> AreasOfConcern { get; set; } = new();
+        public List<string> PositiveFindings { get; set; } = new();
+    }
+    
+    public class LabResultEnhancedResponse
+    {
+        public int Id { get; set; }
+        public DateTime TestDate { get; set; }
+        public string TestName { get; set; } = string.Empty;
+        public string? FileUrl { get; set; }
+        public string? AnalysisSummary { get; set; }
+        public string? NutritionalRecommendations { get; set; }
+        public List<string>? SupplementRecommendations { get; set; }
+        public List<string>? LifestyleRecommendations { get; set; }
+        public List<string>? AreasOfConcern { get; set; }
+        public List<string>? PositiveFindings { get; set; }
+    }
 }

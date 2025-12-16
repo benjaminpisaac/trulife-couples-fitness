@@ -25,6 +25,9 @@ builder.Services.AddDbContext<TruLifeDbContext>(options =>
 // Services
 builder.Services.AddScoped<GeminiService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddHttpClient<TransformationAnalysisService>();
+builder.Services.AddScoped<TransformationAnalysisService>();
+builder.Services.AddScoped<CouplesService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? builder.Configuration["Jwt:Secret"] ?? "your-super-secret-jwt-key-minimum-32-characters-long";
