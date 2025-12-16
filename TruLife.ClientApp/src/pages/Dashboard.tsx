@@ -4,11 +4,20 @@ import { RootState } from '../store';
 import { getProfile, getLatestReadiness } from '../services/api';
 import ReadinessCheckIn from '../components/ReadinessCheckIn';
 
+const kgToLbs = (kg: number) => Math.round(kg * 2.20462);
+const cmToFeetInches = (cm: number) => {
+    const totalInches = cm / 2.54;
+    const feet = Math.floor(totalInches / 12);
+    const inches = Math.round(totalInches % 12);
+    return { feet, inches };
+};
+
 const Dashboard = () => {
     const user = useSelector((state: RootState) => state.auth.user);
     const [profile, setProfile] = useState<any>(null);
     const [readiness, setReadiness] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [measurementSystem, setMeasurementSystem] = useState<'metric' | 'imperial'>('imperial');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -106,19 +115,59 @@ const Dashboard = () => {
 
                 {/* Stats Overview */}
                 <div className="card">
-                    <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Your Stats</h2>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                        <h2 style={{ fontSize: '1.25rem', margin: 0 }}>Your Stats</h2>
+                        <div style={{ display: 'flex', gap: '0.5rem', background: '#f3f4f6', borderRadius: '8px', padding: '0.25rem' }}>
+                            <button
+                                onClick={() => setMeasurementSystem('imperial')}
+                                style={{
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '6px',
+                                    border: 'none',
+                                    background: measurementSystem === 'imperial' ? 'white' : 'transparent',
+                                    fontWeight: measurementSystem === 'imperial' ? 600 : 400,
+                                    cursor: 'pointer',
+                                    fontSize: '0.875rem'
+                                }}
+                            >
+                                Imperial
+                            </button>
+                            <button
+                                onClick={() => setMeasurementSystem('metric')}
+                                style={{
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '6px',
+                                    border: 'none',
+                                    background: measurementSystem === 'metric' ? 'white' : 'transparent',
+                                    fontWeight: measurementSystem === 'metric' ? 600 : 400,
+                                    cursor: 'pointer',
+                                    fontSize: '0.875rem'
+                                }}
+                            >
+                                Metric
+                            </button>
+                        </div>
+                    </div>
                     <div className="grid grid-cols-2 gap-3">
                         <div style={{ textAlign: 'center', padding: '1rem', background: '#f3f4f6', borderRadius: '8px' }}>
                             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#6366f1' }}>
-                                {profile?.currentWeightKg || '--'}
+                                {profile?.currentWeightKg
+                                    ? measurementSystem === 'imperial'
+                                        ? kgToLbs(profile.currentWeightKg)
+                                        : Math.round(profile.currentWeightKg)
+                                    : '--'}
                             </div>
-                            <div className="text-gray">Current Weight (kg)</div>
+                            <div className="text-gray">Current Weight ({measurementSystem === 'imperial' ? 'lbs' : 'kg'})</div>
                         </div>
                         <div style={{ textAlign: 'center', padding: '1rem', background: '#f3f4f6', borderRadius: '8px' }}>
                             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ec4899' }}>
-                                {profile?.targetWeightKg || '--'}
+                                {profile?.targetWeightKg
+                                    ? measurementSystem === 'imperial'
+                                        ? kgToLbs(profile.targetWeightKg)
+                                        : Math.round(profile.targetWeightKg)
+                                    : '--'}
                             </div>
-                            <div className="text-gray">Target Weight (kg)</div>
+                            <div className="text-gray">Target Weight ({measurementSystem === 'imperial' ? 'lbs' : 'kg'})</div>
                         </div>
                     </div>
                 </div>
