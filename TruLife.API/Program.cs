@@ -81,10 +81,11 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
     
-    // Production CORS (update with your actual domain)
+    
+    // Production CORS
     options.AddPolicy("Production", policy =>
     {
-        policy.WithOrigins("https://your-app.azurewebsites.net")
+        policy.WithOrigins("https://trulife-couples-fitness.vercel.app")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
