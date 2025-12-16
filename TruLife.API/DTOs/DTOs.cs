@@ -105,10 +105,6 @@ namespace TruLife.API.DTOs
         public string Base64Image { get; set; } = string.Empty;
     }
     
-    public class AnalyzeEquipmentRequest
-    {
-        public string Base64Image { get; set; } = string.Empty;
-    }
     
     public class MealAnalysisResponse
     {
