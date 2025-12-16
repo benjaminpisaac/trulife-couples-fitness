@@ -183,11 +183,12 @@ namespace TruLife.API.Data
                 .HasIndex(cp => new { cp.PartnerAId, cp.PartnerBId })
                 .IsUnique();
             
+            
             // DNAAnalysis - SNPInterpretation relationship
             modelBuilder.Entity<DNAAnalysis>()
                 .HasMany(d => d.SNPs)
-                .WithOne()
-                .HasForeignKey("DNAAnalysisId")
+                .WithOne(s => s.DNAAnalysis)
+                .HasForeignKey(s => s.DNAAnalysisId)
                 .OnDelete(DeleteBehavior.Cascade);
             
             // Ignore the SNPInterpretations property (it's just an alias)
