@@ -22,6 +22,7 @@ interface DietaryPreferencesProps {
 export default function DietaryPreferences({ currentPreference = 'none', onSelect }: DietaryPreferencesProps) {
     const [selected, setSelected] = useState(currentPreference);
     const [saving, setSaving] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     useEffect(() => {
         setSelected(currentPreference);
@@ -55,52 +56,63 @@ export default function DietaryPreferences({ currentPreference = 'none', onSelec
     return (
         <div className="dietary-preferences">
             <div className="card">
-                <div className="card-header">
-                    <h3>🍴 Dietary Preferences</h3>
-                    <p className="text-sm text-gray-600">
-                        Select your dietary preference for personalized meal recommendations
-                    </p>
-                </div>
-
-                <div className="card-content">
-                    <div className="grid gap-3">
-                        {DIETARY_PREFERENCES.map(pref => (
-                            <button
-                                key={pref.value}
-                                className={`preference-card ${selected === pref.value ? 'selected' : ''}`}
-                                onClick={() => handleSelect(pref.value)}
-                                disabled={saving}
-                            >
-                                <div className="flex items-start gap-3">
-                                    <span className="text-3xl">{pref.emoji}</span>
-                                    <div className="flex-1 text-left">
-                                        <div className="flex items-center gap-2">
-                                            <h4 className="font-semibold">{pref.label}</h4>
-                                            {selected === pref.value && (
-                                                <Check size={16} className="text-green-600" />
-                                            )}
-                                        </div>
-                                        <p className="text-sm text-gray-600">{pref.description}</p>
-                                    </div>
-                                </div>
-                            </button>
-                        ))}
-                    </div>
-
-                    {saving && (
-                        <div className="mt-4 text-center">
-                            <div className="spinner inline-block"></div>
-                            <p className="text-sm text-gray-600 mt-2">Saving preference...</p>
+                <div
+                    className="card-header"
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                            <h3>🍴 Dietary Preferences</h3>
+                            <p className="text-sm text-gray-600">
+                                Current: {DIETARY_PREFERENCES.find(p => p.value === selected)?.label || 'None'}
+                            </p>
                         </div>
-                    )}
-
-                    <div className="mt-4 bg-blue-50 rounded-lg p-3">
-                        <p className="text-sm text-blue-900">
-                            <strong>💡 Note:</strong> Your dietary preference will be used to generate
-                            personalized meal recommendations and filter restaurant suggestions.
-                        </p>
+                        <span>{isExpanded ? '▼' : '▶'}</span>
                     </div>
                 </div>
+
+                {isExpanded && (
+                    <div className="card-content">
+                        <div className="grid gap-3">
+                            {DIETARY_PREFERENCES.map(pref => (
+                                <button
+                                    key={pref.value}
+                                    className={`preference-card ${selected === pref.value ? 'selected' : ''}`}
+                                    onClick={() => handleSelect(pref.value)}
+                                    disabled={saving}
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <span className="text-3xl">{pref.emoji}</span>
+                                        <div className="flex-1 text-left">
+                                            <div className="flex items-center gap-2">
+                                                <h4 className="font-semibold">{pref.label}</h4>
+                                                {selected === pref.value && (
+                                                    <Check size={16} className="text-green-600" />
+                                                )}
+                                            </div>
+                                            <p className="text-sm text-gray-600">{pref.description}</p>
+                                        </div>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+
+                        {saving && (
+                            <div className="mt-4 text-center">
+                                <div className="spinner inline-block"></div>
+                                <p className="text-sm text-gray-600 mt-2">Saving preference...</p>
+                            </div>
+                        )}
+
+                        <div className="mt-4 bg-blue-50 rounded-lg p-3">
+                            <p className="text-sm text-blue-900">
+                                <strong>💡 Note:</strong> Your dietary preference will be used to generate
+                                personalized meal recommendations and filter restaurant suggestions.
+                            </p>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <style jsx>{`

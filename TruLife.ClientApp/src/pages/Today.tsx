@@ -8,6 +8,7 @@ const Today = () => {
     const [macros, setMacros] = useState<any>(null);
     const [meals, setMeals] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [readinessExpanded, setReadinessExpanded] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -70,18 +71,28 @@ const Today = () => {
                     <ReadinessCheckIn onComplete={() => window.location.reload()} />
                 ) : (
                     <div className="card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
-                        <h2 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Today's Readiness</h2>
-                        <div style={{ fontSize: '3rem', fontWeight: 'bold' }}>{readiness.readinessScore}/10</div>
-                        <div className="grid grid-cols-2 gap-2 mt-3">
-                            <div>
-                                <div className="text-sm">😴 Sleep: {readiness.sleepQuality}/10</div>
-                                <div className="text-sm">⚡ Energy: {readiness.energyLevel}/10</div>
+                        <div
+                            onClick={() => setReadinessExpanded(!readinessExpanded)}
+                            style={{ cursor: 'pointer', userSelect: 'none' }}
+                        >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <h2 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Today's Readiness</h2>
+                                <span>{readinessExpanded ? '▼' : '▶'}</span>
                             </div>
-                            <div>
-                                <div className="text-sm">😰 Stress: {readiness.stressLevel}/10</div>
-                                <div className="text-sm">💪 Soreness: {readiness.sorenessLevel}/10</div>
-                            </div>
+                            <div style={{ fontSize: '3rem', fontWeight: 'bold' }}>{readiness.readinessScore}/10</div>
                         </div>
+                        {readinessExpanded && (
+                            <div className="grid grid-cols-2 gap-2 mt-3">
+                                <div>
+                                    <div className="text-sm">😴 Sleep: {readiness.sleepQuality}/10</div>
+                                    <div className="text-sm">⚡ Energy: {readiness.energyLevel}/10</div>
+                                </div>
+                                <div>
+                                    <div className="text-sm">😰 Stress: {readiness.stressLevel}/10</div>
+                                    <div className="text-sm">💪 Soreness: {readiness.sorenessLevel}/10</div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
 
