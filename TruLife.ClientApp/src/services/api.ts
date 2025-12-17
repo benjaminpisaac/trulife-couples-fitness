@@ -46,6 +46,14 @@ export const calculateMacros = (data: any) => api.post('/nutrition/calculate-mac
 export const getCurrentMacros = () => api.get('/nutrition/macros/current');
 export const logMeal = (data: any) => api.post('/nutrition/meals', data);
 export const getTodaysMeals = () => api.get('/nutrition/meals/today');
+
+// Restaurant API
+export const searchRestaurants = (data: {
+    latitude: number;
+    longitude: number;
+    radiusMeters?: number;
+    cuisine?: string;
+}) => api.post('/restaurant/search', data);
 export const getMealRecommendations = () => api.post('/nutrition/recommendations');
 
 // Couples

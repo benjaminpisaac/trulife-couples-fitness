@@ -25,6 +25,7 @@ builder.Services.AddDbContext<TruLifeDbContext>(options =>
 // Services
 builder.Services.AddScoped<GeminiService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<GooglePlacesService>();
 builder.Services.AddHttpClient<TransformationAnalysisService>();
 builder.Services.AddScoped<TransformationAnalysisService>();
 builder.Services.AddScoped<CouplesService>();

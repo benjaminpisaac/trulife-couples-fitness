@@ -59,52 +59,45 @@ export default function RestaurantFinder({
 
         setLoading(true);
         try {
-            // In production, this would call the backend API
-            // For now, simulate with sample data
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // Parse location (could be "lat, lng" or address)
+            let latitude = 0;
+            let longitude = 0;
 
-            const sampleRestaurants: Restaurant[] = [
-                {
-                    restaurantType: 'Fast Casual',
-                    cuisine: 'Mediterranean',
-                    recommendedDishes: [
-                        {
-                            dishName: 'Grilled Chicken Bowl',
-                            estimatedCalories: 580,
-                            estimatedProtein: 45,
-                            estimatedCarbs: 52,
-                            estimatedFats: 18,
-                            orderingTips: 'Ask for extra protein, light on rice, add extra vegetables'
-                        },
-                        {
-                            dishName: 'Salmon Salad',
-                            estimatedCalories: 520,
-                            estimatedProtein: 38,
-                            estimatedCarbs: 28,
-                            estimatedFats: 28,
-                            orderingTips: 'Dressing on the side, add avocado for healthy fats'
-                        }
-                    ]
+            if (location.includes(',')) {
+                const [lat, lng] = location.split(',').map(s => parseFloat(s.trim()));
+                latitude = lat;
+                longitude = lng;
+            } else {
+                // For now, use a default location if address is entered
+                // In production, you'd geocode the address first
+                alert('Please use "Use Current Location" or enter coordinates (lat, lng)');
+                setLoading(false);
+                return;
+            }
+
+            // Call the backend API
+            const response = await fetch('http://localhost:5000/api/restaurant/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                {
-                    restaurantType: 'Mexican Grill',
-                    cuisine: 'Mexican',
-                    recommendedDishes: [
-                        {
-                            dishName: 'Burrito Bowl',
-                            estimatedCalories: 620,
-                            estimatedProtein: 42,
-                            estimatedCarbs: 58,
-                            estimatedFats: 22,
-                            orderingTips: 'Skip the tortilla, double protein, fajita veggies, light cheese'
-                        }
-                    ]
-                }
-            ];
+                body: JSON.stringify({
+                    latitude,
+                    longitude,
+                    radiusMeters: 5000,
+                    cuisine: selectedCuisine === 'Any' ? null : selectedCuisine
+                })
+            });
 
-            setRestaurants(sampleRestaurants);
+            if (!response.ok) {
+                throw new Error('Failed to search restaurants');
+            }
+
+            const data = await response.json();
+            setRestaurants(data.restaurants || []);
         } catch (error) {
-            console.error('Error finding restaurants:', error);
+            console.error('Error searching restaurants:', error);
             alert('Failed to find restaurants. Please try again.');
         } finally {
             setLoading(false);
