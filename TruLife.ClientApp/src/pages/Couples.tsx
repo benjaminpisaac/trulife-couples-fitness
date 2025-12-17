@@ -330,14 +330,16 @@ const Couples = () => {
                     </>
                 )}
                 {/* Couple Profile */}
-                <div className="card" style={{ background: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)', color: 'white' }}>
-                    <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>
-                        {coupleProfile.partnerAName} & {coupleProfile.partnerBName}
-                    </h2>
-                    <p style={{ opacity: 0.9 }}>
-                        Paired since {new Date(coupleProfile.pairedAt).toLocaleDateString()}
-                    </p>
-                </div>
+                {coupleProfile && (
+                    <div className="card" style={{ background: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)', color: 'white' }}>
+                        <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>
+                            {coupleProfile.partnerAName} & {coupleProfile.partnerBName}
+                        </h2>
+                        <p style={{ opacity: 0.9 }}>
+                            Paired since {new Date(coupleProfile.pairedAt).toLocaleDateString()}
+                        </p>
+                    </div>
+                )}
 
                 {/* Romantic Evening Generator */}
                 <div className="card">
@@ -360,7 +362,12 @@ const Couples = () => {
                     {challenges.length === 0 ? (
                         <div>
                             <p className="text-gray mb-3">No active challenges. Create one to get started!</p>
-                            <button className="btn btn-outline w-full">Create Challenge</button>
+                            <button
+                                className="btn btn-outline w-full"
+                                onClick={() => setShowChallengeSetup(true)}
+                            >
+                                Create Challenge
+                            </button>
                         </div>
                     ) : (
                         <div className="flex flex-col gap-2">
@@ -382,11 +389,36 @@ const Couples = () => {
                 <div className="card">
                     <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Couples Features</h2>
                     <div className="flex flex-col gap-2">
-                        <button className="btn btn-outline">💪 Create Workout Challenge</button>
-                        <button className="btn btn-outline">🍽️ Create Nutrition Challenge</button>
-                        <button className="btn btn-outline">🎯 Set Romantic Attraction Goal</button>
-                        <button className="btn btn-outline">💬 Communication Hub</button>
-                        <button className="btn btn-outline">📚 Romantic History Vault</button>
+                        <button
+                            className="btn btn-outline"
+                            onClick={() => setShowChallengeSetup(true)}
+                        >
+                            💪 Create Workout Challenge
+                        </button>
+                        <button
+                            className="btn btn-outline"
+                            onClick={() => setShowChallengeSetup(true)}
+                        >
+                            🍽️ Create Nutrition Challenge
+                        </button>
+                        <button
+                            className="btn btn-outline"
+                            onClick={() => alert('Romantic Attraction Goal feature coming soon! 💕')}
+                        >
+                            🎯 Set Romantic Attraction Goal
+                        </button>
+                        <button
+                            className="btn btn-outline"
+                            onClick={() => alert('Communication Hub coming soon! 💬')}
+                        >
+                            💬 Communication Hub
+                        </button>
+                        <button
+                            className="btn btn-outline"
+                            onClick={() => alert('Romantic History Vault coming soon! 📚')}
+                        >
+                            📚 Romantic History Vault
+                        </button>
                     </div>
                 </div>
 
