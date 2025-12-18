@@ -246,9 +246,24 @@ const Eat = () => {
                             Share meals, create nutrition challenges, or plan romantic dinners together!
                         </p>
                         <div className="flex flex-col gap-2">
-                            <button className="btn btn-secondary">💑 Plan Romantic Dinner</button>
-                            <button className="btn btn-outline">Create Nutrition Challenge</button>
-                            <button className="btn btn-outline">View Partner's Meals</button>
+                            <button
+                                className="btn btn-secondary"
+                                onClick={() => window.location.href = '/couples'}
+                            >
+                                💑 Plan Romantic Dinner
+                            </button>
+                            <button
+                                className="btn btn-outline"
+                                onClick={() => window.location.href = '/couples'}
+                            >
+                                Create Nutrition Challenge
+                            </button>
+                            <button
+                                className="btn btn-outline"
+                                onClick={() => alert('View your partner\'s meal history and nutrition stats! Feature coming soon 🍽️')}
+                            >
+                                View Partner's Meals
+                            </button>
                         </div>
                     </div>
                 )}

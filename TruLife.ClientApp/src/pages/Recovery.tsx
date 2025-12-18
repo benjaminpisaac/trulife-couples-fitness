@@ -3,9 +3,18 @@ import { useEffect, useState } from 'react';
 const Recovery = () => {
     const [loading, setLoading] = useState(true);
     const [recoveryData, setRecoveryData] = useState<any>(null);
+    const [showLogModal, setShowLogModal] = useState(false);
+    const [selectedTool, setSelectedTool] = useState<string>('');
+    const [duration, setDuration] = useState<number>(15);
+    const [intensity, setIntensity] = useState<number>(5);
+    const [notes, setNotes] = useState<string>('');
+    const [toolHistory, setToolHistory] = useState<any[]>([]);
+    const [stats, setStats] = useState<any>(null);
 
     useEffect(() => {
         fetchRecoveryData();
+        fetchToolHistory();
+        fetchStats();
     }, []);
 
     const fetchRecoveryData = async () => {
@@ -27,6 +36,74 @@ const Recovery = () => {
             setLoading(false);
         }
     };
+
+    const fetchToolHistory = async () => {
+        try {
+            const response = await fetch('/api/recovery/tools/history?days=7', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setToolHistory(data);
+            }
+        } catch (error) {
+            console.error('Error fetching tool history:', error);
+        }
+    };
+
+    const fetchStats = async () => {
+        try {
+            const response = await fetch('/api/recovery/tools/stats', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setStats(data);
+            }
+        } catch (error) {
+            console.error('Error fetching stats:', error);
+        }
+    };
+
+    const handleToolClick = (toolType: string) => {
+        setSelectedTool(toolType);
+        setShowLogModal(true);
+        // Reset form with default durations
+        setDuration(toolType === 'Meditation' ? 10 : toolType === 'IceBath' ? 5 : toolType === 'Sauna' ? 20 : 30);
+        setIntensity(5);
+        setNotes('');
+    };
+
+    const handleLogSession = async () => {
+        try {
+            const response = await fetch('/api/recovery/tool', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({
+                    toolType: selectedTool,
+                    durationMinutes: duration,
+                    intensity,
+                    notes
+                })
+            });
+
+            if (response.ok) {
+                setShowLogModal(false);
+                fetchToolHistory();
+                fetchStats();
+                alert(`${selectedTool} session logged successfully! 🎉`);
+            } else {
+                alert('Failed to log session. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error logging session:', error);
+            alert('Failed to log session. Please try again.');
+        }
+    };
+
 
     if (loading) {
         return (
@@ -112,20 +189,155 @@ const Recovery = () => {
                 <div className="card">
                     <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>🛠️ Recovery Tools</h2>
                     <div className="grid grid-cols-2 gap-2">
-                        <button className="btn btn-outline" style={{ padding: '1rem' }}>
+                        <button
+                            className="btn btn-outline"
+                            style={{ padding: '1rem' }}
+                            onClick={() => handleToolClick('Meditation')}
+                        >
                             <div>🧘 Meditation</div>
                         </button>
-                        <button className="btn btn-outline" style={{ padding: '1rem' }}>
+                        <button
+                            className="btn btn-outline"
+                            style={{ padding: '1rem' }}
+                            onClick={() => handleToolClick('IceBath')}
+                        >
                             <div>🛁 Ice Bath</div>
                         </button>
-                        <button className="btn btn-outline" style={{ padding: '1rem' }}>
+                        <button
+                            className="btn btn-outline"
+                            style={{ padding: '1rem' }}
+                            onClick={() => handleToolClick('Sauna')}
+                        >
                             <div>🧖 Sauna</div>
                         </button>
-                        <button className="btn btn-outline" style={{ padding: '1rem' }}>
+                        <button
+                            className="btn btn-outline"
+                            style={{ padding: '1rem' }}
+                            onClick={() => handleToolClick('Massage')}
+                        >
                             <div>💆 Massage</div>
                         </button>
                     </div>
                 </div>
+
+                {/* Recovery Tool Log Modal */}
+                {showLogModal && (
+                    <div className="modal-overlay" onClick={() => setShowLogModal(false)}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Log {selectedTool} Session</h2>
+
+                            <div className="form-group">
+                                <label className="label">Duration (minutes)</label>
+                                <input
+                                    type="number"
+                                    className="input"
+                                    value={duration}
+                                    onChange={(e) => setDuration(parseInt(e.target.value))}
+                                    min="1"
+                                    max="180"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label className="label">Intensity (1-10)</label>
+                                <input
+                                    type="range"
+                                    min="1"
+                                    max="10"
+                                    value={intensity}
+                                    onChange={(e) => setIntensity(parseInt(e.target.value))}
+                                    style={{ width: '100%' }}
+                                />
+                                <div style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold', marginTop: '0.5rem' }}>
+                                    {intensity}/10
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="label">Notes (optional)</label>
+                                <textarea
+                                    className="input"
+                                    value={notes}
+                                    onChange={(e) => setNotes(e.target.value)}
+                                    rows={3}
+                                    placeholder="How did you feel? Any observations?"
+                                />
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={handleLogSession}
+                                    disabled={loading}
+                                    style={{ flex: 1 }}
+                                >
+                                    {loading ? 'Logging...' : 'Log Session'}
+                                </button>
+                                <button
+                                    className="btn btn-outline"
+                                    onClick={() => setShowLogModal(false)}
+                                    style={{ flex: 1 }}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Recent Sessions */}
+                {toolHistory.length > 0 && (
+                    <div className="card">
+                        <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>📊 Recent Sessions (Last 7 Days)</h2>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                            {toolHistory.map((session: any, idx: number) => (
+                                <div key={idx} style={{ padding: '1rem', background: '#f9fafb', borderRadius: '8px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                                        <strong>{session.toolType}</strong>
+                                        <span style={{ color: '#6b7280', fontSize: '0.9rem' }}>
+                                            {new Date(session.loggedAt).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                    <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>
+                                        ⏱️ {session.durationMinutes} min | 💪 Intensity: {session.intensity || 'N/A'}/10
+                                    </div>
+                                    {session.notes && (
+                                        <div style={{ fontSize: '0.85rem', color: '#6b7280', marginTop: '0.5rem', fontStyle: 'italic' }}>
+                                            "{session.notes}"
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Stats */}
+                {stats && stats.totalSessions > 0 && (
+                    <div className="card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
+                        <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>📈 30-Day Stats</h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                            <div>
+                                <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{stats.totalSessions}</div>
+                                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Sessions</div>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{stats.totalMinutes}</div>
+                                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Total Minutes</div>
+                            </div>
+                        </div>
+                        {stats.byType && stats.byType.length > 0 && (
+                            <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.3)' }}>
+                                <div style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>By Type:</div>
+                                {stats.byType.map((type: any, idx: number) => (
+                                    <div key={idx} style={{ fontSize: '0.9rem', marginBottom: '0.25rem' }}>
+                                        {type.type}: {type.count} sessions ({type.totalMinutes} min)
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

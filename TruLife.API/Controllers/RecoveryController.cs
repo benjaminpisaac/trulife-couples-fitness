@@ -129,5 +129,80 @@ namespace TruLife.API.Controllers
                 Notes = l.Notes
             }).ToList());
         }
+        
+        [HttpPost("tool")]
+        public async Task<IActionResult> LogRecoveryTool([FromBody] RecoveryToolRequest request)
+        {
+            var userId = _authService.GetUserIdFromToken(User);
+            if (userId == null) return Unauthorized();
+            
+            var toolLog = new RecoveryToolLog
+            {
+                UserId = userId.Value,
+                ToolType = request.ToolType,
+                DurationMinutes = request.DurationMinutes,
+                Intensity = request.Intensity,
+                Notes = request.Notes,
+                LoggedAt = DateTime.UtcNow
+            };
+            
+            _context.RecoveryToolLogs.Add(toolLog);
+            await _context.SaveChangesAsync();
+            
+            return Ok(new { message = $"{request.ToolType} session logged successfully", log = toolLog });
+        }
+        
+        [HttpGet("tools/history")]
+        public async Task<IActionResult> GetToolHistory([FromQuery] int days = 30)
+        {
+            var userId = _authService.GetUserIdFromToken(User);
+            if (userId == null) return Unauthorized();
+            
+            var startDate = DateTime.UtcNow.AddDays(-days);
+            
+            var logs = await _context.RecoveryToolLogs
+                .Where(r => r.UserId == userId && r.LoggedAt >= startDate)
+                .OrderByDescending(r => r.LoggedAt)
+                .ToListAsync();
+            
+            return Ok(logs);
+        }
+        
+        [HttpGet("tools/stats")]
+        public async Task<IActionResult> GetToolStats()
+        {
+            var userId = _authService.GetUserIdFromToken(User);
+            if (userId == null) return Unauthorized();
+            
+            var last30Days = DateTime.UtcNow.AddDays(-30);
+            
+            var logs = await _context.RecoveryToolLogs
+                .Where(r => r.UserId == userId && r.LoggedAt >= last30Days)
+                .ToListAsync();
+            
+            var stats = new
+            {
+                totalSessions = logs.Count,
+                totalMinutes = logs.Sum(r => r.DurationMinutes),
+                byType = logs.GroupBy(r => r.ToolType)
+                    .Select(g => new { 
+                        type = g.Key, 
+                        count = g.Count(), 
+                        totalMinutes = g.Sum(r => r.DurationMinutes),
+                        averageIntensity = g.Average(r => r.Intensity ?? 5)
+                    })
+                    .ToList()
+            };
+            
+            return Ok(stats);
+        }
+    }
+    
+    public class RecoveryToolRequest
+    {
+        public string ToolType { get; set; } = string.Empty; // "Meditation", "IceBath", "Sauna", "Massage"
+        public int DurationMinutes { get; set; }
+        public int? Intensity { get; set; } // 1-10 scale
+        public string? Notes { get; set; }
     }
 }

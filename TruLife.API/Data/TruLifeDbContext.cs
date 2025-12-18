@@ -23,6 +23,7 @@ namespace TruLife.API.Data
         public DbSet<SupplementLog> SupplementLogs { get; set; }
         public DbSet<FastingSession> FastingSessions { get; set; }
         public DbSet<RecoveryLog> RecoveryLogs { get; set; }
+        public DbSet<RecoveryToolLog> RecoveryToolLogs { get; set; }
         
         // Workout
         public DbSet<Models.Environment> Environments { get; set; }

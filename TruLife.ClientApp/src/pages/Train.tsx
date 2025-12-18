@@ -237,9 +237,24 @@ const Train = () => {
                             Work out together, compete in challenges, or support each other's fitness goals!
                         </p>
                         <div className="flex flex-col gap-2">
-                            <button className="btn btn-secondary">Create Workout Challenge</button>
-                            <button className="btn btn-outline">View Partner's Workouts</button>
-                            <button className="btn btn-outline">Shared Training Program</button>
+                            <button
+                                className="btn btn-secondary"
+                                onClick={() => window.location.href = '/couples'}
+                            >
+                                Create Workout Challenge
+                            </button>
+                            <button
+                                className="btn btn-outline"
+                                onClick={() => alert('View your partner\'s workout history and progress! Feature coming soon 💪')}
+                            >
+                                View Partner's Workouts
+                            </button>
+                            <button
+                                className="btn btn-outline"
+                                onClick={() => alert('Create a shared training program you can both follow! Feature coming soon 🏋️')}
+                            >
+                                Shared Training Program
+                            </button>
                         </div>
                     </div>
                 )}

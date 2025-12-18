@@ -414,19 +414,19 @@ const Couples = () => {
                                 </button>
                                 <button
                                     className="btn btn-outline"
-                                    onClick={() => alert('Romantic Attraction Goal feature coming soon! 💕')}
+                                    onClick={() => alert('Set body goals inspired by what your partner finds attractive! This feature helps you understand and work towards physical attributes your partner loves. Coming soon! 💕')}
                                 >
                                     🎯 Set Romantic Attraction Goal
                                 </button>
                                 <button
                                     className="btn btn-outline"
-                                    onClick={() => alert('Communication Hub coming soon! 💬')}
+                                    onClick={() => alert('Private messaging, shared goals, and couple check-ins all in one place! Stay connected with your fitness partner. Coming soon! 💬')}
                                 >
                                     💬 Communication Hub
                                 </button>
                                 <button
                                     className="btn btn-outline"
-                                    onClick={() => alert('Romantic History Vault coming soon! 📚')}
+                                    onClick={() => alert('Your relationship timeline with fitness milestones, date nights, and special moments! Celebrate your journey together. Coming soon! 📚')}
                                 >
                                     📚 Romantic History Vault
                                 </button>
@@ -459,7 +459,8 @@ const Couples = () => {
             </>
                 )}
         </div>
-        </div >    );
+        </div >
+    );
 };
 
 export default Couples;

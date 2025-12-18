@@ -130,4 +130,52 @@ namespace TruLife.API.Models
         public bool IsActive { get; set; } = true;
         public string? Notes { get; set; }
     }
+    
+    public class RecoveryLog
+    {
+        [Key]
+        public int Id { get; set; }
+        
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
+        
+        public DateTime LogDate { get; set; } = DateTime.UtcNow;
+        
+        public int RecoveryScore { get; set; } // Calculated average
+        
+        [Range(1, 10)]
+        public int SleepQuality { get; set; }
+        
+        public double? HoursSlept { get; set; }
+        
+        [Range(1, 10)]
+        public int StressLevel { get; set; }
+        
+        [Range(1, 10)]
+        public int MuscleRecovery { get; set; }
+        
+        public string? Notes { get; set; }
+    }
+    
+    public class RecoveryToolLog
+    {
+        [Key]
+        public int Id { get; set; }
+        
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
+        
+        public DateTime LoggedAt { get; set; } = DateTime.UtcNow;
+        
+        [Required]
+        [MaxLength(50)]
+        public string ToolType { get; set; } = string.Empty; // "Meditation", "IceBath", "Sauna", "Massage"
+        
+        public int DurationMinutes { get; set; }
+        
+        [Range(1, 10)]
+        public int? Intensity { get; set; } // Optional 1-10 scale
+        
+        public string? Notes { get; set; }
+    }
 }
