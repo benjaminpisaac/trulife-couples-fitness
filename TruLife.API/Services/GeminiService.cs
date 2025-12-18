@@ -11,7 +11,10 @@ namespace TruLife.API.Services
         public GeminiService(IConfiguration configuration)
         {
             _httpClient = new HttpClient();
-            _apiKey = configuration["Gemini:ApiKey"] ?? throw new InvalidOperationException("Gemini API key not configured");
+            // Support both Gemini:ApiKey (local) and GEMINI_API_KEY (Render env var)
+            _apiKey = configuration["Gemini:ApiKey"] 
+                      ?? configuration["GEMINI_API_KEY"] 
+                      ?? throw new InvalidOperationException("Gemini API key not configured");
         }
         
         public async Task<string> AnalyzeEquipmentFromPhoto(string base64Image)
