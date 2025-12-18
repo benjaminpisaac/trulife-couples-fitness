@@ -18,7 +18,7 @@ const Dashboard = () => {
     const [readiness, setReadiness] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [measurementSystem, setMeasurementSystem] = useState<'metric' | 'imperial'>('imperial');
-    const [readinessExpanded, setReadinessExpanded] = useState(false);
+    const [readinessExpanded, setReadinessExpanded] = useState(false); // Collapsed by default after check-in
 
     useEffect(() => {
         const fetchData = async () => {
