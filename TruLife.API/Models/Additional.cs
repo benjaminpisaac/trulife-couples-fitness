@@ -2,34 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TruLife.API.Models
 {
-    // Recovery tracking
-    public class RecoveryLog
-    {
-        [Key]
-        public int Id { get; set; }
-        
-        public int UserId { get; set; }
-        public User User { get; set; } = null!;
-        
-        public DateTime LogDate { get; set; } = DateTime.UtcNow;
-        
-        [Range(1, 10)]
-        public int RecoveryScore { get; set; } // Overall recovery 1-10
-        
-        [Range(1, 10)]
-        public int SleepQuality { get; set; }
-        
-        public double? HoursSlept { get; set; }
-        
-        [Range(1, 10)]
-        public int StressLevel { get; set; }
-        
-        [Range(1, 10)]
-        public int MuscleRecovery { get; set; }
-        
-        public string? Notes { get; set; }
-    }
-    
     // Progress photos
     public class ProgressPhoto
     {
