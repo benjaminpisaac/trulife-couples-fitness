@@ -456,10 +456,10 @@ const Couples = () => {
                             </div>
                         </div>
                     </div>
-            </>
+                    </>
                 )}
+            </div>
         </div>
-        </div >
     );
 };
 

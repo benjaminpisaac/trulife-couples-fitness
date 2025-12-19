@@ -1,0 +1,54 @@
+{
+    "expo": {
+        "name": "TruLife Couples Fitness",
+        "slug": "trulife-couples-fitness",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "userInterfaceStyle": "automatic",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#6366f1"
+        },
+        "assetBundlePatterns": [
+            "**/*"
+        ],
+        "ios": {
+            "supportsTablet": true,
+            "bundleIdentifier": "com.trulife.couplesfitness",
+            "buildNumber": "1.0.0",
+            "infoPlist": {
+                "NSHealthShareUsageDescription": "TruLife needs access to read your health data to provide personalized fitness insights.",
+                "NSHealthUpdateUsageDescription": "TruLife needs access to write health data to track your workouts.",
+                "NSCameraUsageDescription": "TruLife needs camera access to scan meal photos and equipment.",
+                "NSPhotoLibraryUsageDescription": "TruLife needs photo library access to save progress photos."
+            },
+            "config": {
+                "usesNonExemptEncryption": false
+            }
+        },
+        "android": {
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/adaptive-icon.png",
+                "backgroundColor": "#6366f1"
+            },
+            "package": "com.trulife.couplesfitness"
+        },
+        "web": {
+            "favicon": "./assets/favicon.png",
+            "bundler": "metro"
+        },
+        "plugins": [
+            [
+                "expo-build-properties",
+                {
+                    "ios": {
+                        "useFrameworks": "static"
+                    }
+                }
+            ]
+        ],
+        "scheme": "trulife"
+    }
+}

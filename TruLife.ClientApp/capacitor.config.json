@@ -1,13 +1,16 @@
+```json
 {
-    "appId": "com.trulife.fitness",
+    "appId": "com.trulife.couplesfitness",
     "appName": "TruLife Couples Fitness",
     "webDir": "dist",
     "server": {
-        "androidScheme": "https"
+        "androidScheme": "https",
+        "url": "http://localhost:5173",
+        "cleartext": true
     },
     "plugins": {
         "SplashScreen": {
-            "launchShowDuration": 2000,
+            "launchShowDuration": 0,
             "backgroundColor": "#6366f1",
             "showSpinner": true,
             "spinnerColor": "#ffffff"
