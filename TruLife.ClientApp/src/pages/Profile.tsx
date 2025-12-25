@@ -61,8 +61,22 @@ const Profile = () => {
     const fetchProfile = async () => {
         try {
             const response = await getProfile();
-            setProfile(response.data);
-            setFormData(response.data);
+
+            // Load medical fields from localStorage
+            const ethnicity = localStorage.getItem('userEthnicity') || '';
+            const medicalConditions = localStorage.getItem('userMedicalConditions') || '';
+            const medications = localStorage.getItem('userMedications') || '';
+
+            // Merge backend data with localStorage medical data
+            const profileData = {
+                ...response.data,
+                ethnicity,
+                medicalConditions,
+                medications
+            };
+
+            setProfile(profileData);
+            setFormData(profileData);
 
             // Initialize imperial values from metric data
             if (response.data.heightCm) {
@@ -111,6 +125,11 @@ const Profile = () => {
         setLoading(true);
 
         try {
+            // Save medical fields to localStorage (no backend database)
+            localStorage.setItem('userEthnicity', formData.ethnicity || '');
+            localStorage.setItem('userMedicalConditions', formData.medicalConditions || '');
+            localStorage.setItem('userMedications', formData.medications || '');
+
             // Convert imperial to metric before saving
             const dataToSave = { ...formData };
 
@@ -122,6 +141,11 @@ const Profile = () => {
                 dataToSave.currentWeightKg = parseFloat(weightLbs) / 2.20462 || 0;
                 dataToSave.targetWeightKg = parseFloat(targetWeightLbs) / 2.20462 || 0;
             }
+
+            // Remove medical fields from backend save (they're in localStorage only)
+            delete dataToSave.ethnicity;
+            delete dataToSave.medicalConditions;
+            delete dataToSave.medications;
 
             await updateProfile(dataToSave);
             await fetchProfile();
