@@ -68,14 +68,18 @@ namespace TruLife.API.Controllers
             var userId = _authService.GetUserIdFromToken(User);
             if (userId == null) return Unauthorized();
             
+            // Get today's date in UTC (start of day)
+            var today = DateTime.UtcNow.Date;
+            
+            // Only return today's readiness log
             var log = await _context.ReadinessLogs
-                .Where(r => r.UserId == userId)
+                .Where(r => r.UserId == userId && r.LogDate.Date == today)
                 .OrderByDescending(r => r.LogDate)
                 .FirstOrDefaultAsync();
             
             if (log == null)
             {
-                return NotFound(new { message = "No readiness logs found" });
+                return NotFound(new { message = "No readiness log for today" });
             }
             
             var readinessScore = (log.SleepQuality + log.EnergyLevel + log.MotivationLevel +

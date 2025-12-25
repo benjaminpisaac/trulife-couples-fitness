@@ -32,8 +32,12 @@ const Dashboard = () => {
                     setProfile(profileRes.value.data);
                 }
 
+                // Backend now returns 404 if no readiness log for today
                 if (readinessRes.status === 'fulfilled') {
                     setReadiness(readinessRes.value.data);
+                } else {
+                    // No readiness for today - show check-in form
+                    setReadiness(null);
                 }
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
@@ -43,6 +47,22 @@ const Dashboard = () => {
         };
 
         fetchData();
+
+        // Set up midnight reset timer
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        const msUntilMidnight = tomorrow.getTime() - now.getTime();
+
+        const midnightTimer = setTimeout(() => {
+            // Reset readiness at midnight to show form again
+            setReadiness(null);
+            setLoading(true);
+            fetchData();
+        }, msUntilMidnight);
+
+        return () => clearTimeout(midnightTimer);
     }, []);
 
     if (loading) {

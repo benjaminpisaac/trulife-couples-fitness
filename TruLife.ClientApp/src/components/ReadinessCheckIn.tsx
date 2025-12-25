@@ -24,7 +24,7 @@ export default function ReadinessCheckIn({ onComplete }: ReadinessCheckInProps) 
         setSubmitting(true);
 
         try {
-            await createReadinessLog({
+            const response = await createReadinessLog({
                 sleepQuality,
                 stressLevel,
                 sorenessLevel,
@@ -34,11 +34,14 @@ export default function ReadinessCheckIn({ onComplete }: ReadinessCheckInProps) 
                 notes
             });
 
-            alert('Readiness logged successfully!');
+            console.log('✅ Readiness logged successfully:', response.data);
+
+            // Success - trigger parent refresh
             if (onComplete) onComplete();
-        } catch (error) {
-            console.error('Error logging readiness:', error);
-            alert('Failed to log readiness. Please try again.');
+        } catch (error: any) {
+            console.error('❌ Error logging readiness:', error);
+            const errorMsg = error.response?.data?.message || error.message || 'Failed to log readiness';
+            alert(errorMsg + '. Please try again.');
         } finally {
             setSubmitting(false);
         }
