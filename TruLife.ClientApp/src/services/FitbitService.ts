@@ -1,26 +1,27 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Browser } from '@capacitor/browser';
-import { App } from '@capacitor/app';
+// Web-compatible Fitbit Service (Capacitor imports removed for Vercel build)
+// Note: Full native functionality requires Capacitor plugins
 
-const FITBIT_CLIENT_ID = process.env.VITE_FITBIT_CLIENT_ID || 'YOUR_FITBIT_CLIENT_ID';
-const FITBIT_CLIENT_SECRET = process.env.VITE_FITBIT_CLIENT_SECRET || 'YOUR_FITBIT_CLIENT_SECRET';
-const REDIRECT_URI = 'trulife://fitbit-callback';
+const FITBIT_CLIENT_ID = import.meta.env.VITE_FITBIT_CLIENT_ID || 'YOUR_FITBIT_CLIENT_ID';
+const FITBIT_CLIENT_SECRET = import.meta.env.VITE_FITBIT_CLIENT_SECRET || 'YOUR_FITBIT_CLIENT_SECRET';
+const REDIRECT_URI = typeof window !== 'undefined' ? `${window.location.origin}/fitbit-callback` : 'http://localhost:5173/fitbit-callback';
 
 export class FitbitService {
     private static accessToken: string | null = null;
     private static refreshToken: string | null = null;
 
-    // Initialize deep link listener
+    // Initialize (web version - no deep links)
     static initialize() {
-        App.addListener('appUrlOpen', (data: any) => {
-            const url = data.url;
-            if (url.includes('fitbit-callback')) {
-                this.handleCallback(url);
+        // Check for OAuth callback in URL
+        if (typeof window !== 'undefined' && window.location.pathname === '/fitbit-callback') {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('code');
+            if (code) {
+                this.handleCallback(code);
             }
-        });
+        }
     }
 
-    // OAuth Authorization
+    // OAuth Authorization (web version)
     static async authorize(): Promise<boolean> {
         try {
             const authUrl = `https://www.fitbit.com/oauth2/authorize?` +
@@ -29,9 +30,8 @@ export class FitbitService {
                 `response_type=code&` +
                 `scope=activity heartrate sleep nutrition profile weight`;
 
-            await Browser.open({ url: authUrl });
-
-            // Wait for callback (handled by appUrlOpen listener)
+            // Open in new window for web
+            window.open(authUrl, '_blank');
             return true;
         } catch (error) {
             console.error('Fitbit auth error:', error);
@@ -40,16 +40,15 @@ export class FitbitService {
     }
 
     // Handle OAuth callback
-    private static async handleCallback(url: string) {
+    private static async handleCallback(code: string) {
         try {
-            const code = new URL(url).searchParams.get('code');
-            if (code) {
-                await this.exchangeCodeForToken(code);
-                await Browser.close();
+            await this.exchangeCodeForToken(code);
 
-                // Notify app of successful auth
-                window.dispatchEvent(new CustomEvent('fitbit-authorized'));
-            }
+            // Notify app of successful auth
+            window.dispatchEvent(new CustomEvent('fitbit-authorized'));
+
+            // Redirect back to app
+            window.location.href = '/profile';
         } catch (error) {
             console.error('Callback error:', error);
         }
@@ -77,7 +76,7 @@ export class FitbitService {
                 this.accessToken = data.access_token;
                 this.refreshToken = data.refresh_token;
 
-                // Store tokens securely
+                // Store tokens
                 await this.storeTokens(data.access_token, data.refresh_token);
 
                 return true;
@@ -241,4 +240,6 @@ export class FitbitService {
 }
 
 // Initialize on app start
-FitbitService.initialize();
+if (typeof window !== 'undefined') {
+    FitbitService.initialize();
+}
