@@ -59,34 +59,13 @@ Only return the JSON object, no additional text.";
             string fitnessGoal,
             string availableEquipment,
             int readinessScore,
-            string? medicalConditions = null,
-            string? medications = null,
             string? recentWorkoutHistory = null)
         {
-            // Build medical safety context
-            var medicalContext = "";
-            if (!string.IsNullOrEmpty(medicalConditions) || !string.IsNullOrEmpty(medications))
-            {
-                medicalContext = $@"
-CRITICAL MEDICAL INFORMATION:
-- Medical Conditions: {medicalConditions ?? "None"}
-- Current Medications: {medications ?? "None"}
-
-SAFETY REQUIREMENTS:
-- Avoid exercises that may aggravate medical conditions
-- Modify intensity based on medications (e.g., lower intensity for blood pressure meds)
-- Include appropriate modifications and alternatives
-- Prioritize safety over intensity
-";
-            }
-
             var prompt = $@"Generate a personalized workout plan based on:
 - Fitness Goal: {fitnessGoal}
 - Available Equipment: {availableEquipment}
 - Readiness Score (1-10): {readinessScore}
 {(recentWorkoutHistory != null ? $"- Recent Workout History: {recentWorkoutHistory}" : "")}
-
-{medicalContext}
 
 Return a JSON object with this structure:
 {{
@@ -117,35 +96,14 @@ Adjust intensity based on readiness score. Only return JSON, no additional text.
             double remainingProtein,
             double remainingCarbs,
             double remainingFats,
-            string dietaryPreferences,
-            string? ethnicity = null,
-            string? medicalConditions = null,
-            string? medications = null)
+            string dietaryPreferences)
         {
-            // Build cultural context
-            var culturalContext = !string.IsNullOrEmpty(ethnicity) 
-                ? $"\n- Cultural Background: {ethnicity} (suggest culturally appropriate meals)" 
-                : "";
-
-            // Build medical context
-            var medicalContext = "";
-            if (!string.IsNullOrEmpty(medicalConditions) || !string.IsNullOrEmpty(medications))
-            {
-                medicalContext = $@"
-
-MEDICAL CONSIDERATIONS:
-- Medical Conditions: {medicalConditions ?? "None"}
-- Current Medications: {medications ?? "None"}
-- Avoid foods that may interact with medications or aggravate conditions
-- Consider sodium, sugar, and other dietary restrictions based on conditions";
-            }
-
             var prompt = $@"Generate 3 meal recommendations based on:
 - Remaining Calories: {remainingCalories}
 - Remaining Protein: {remainingProtein}g
 - Remaining Carbs: {remainingCarbs}g
 - Remaining Fats: {remainingFats}g
-- Dietary Preferences: {dietaryPreferences}{culturalContext}{medicalContext}
+- Dietary Preferences: {dietaryPreferences}
 
 Return a JSON array of meal suggestions:
 [

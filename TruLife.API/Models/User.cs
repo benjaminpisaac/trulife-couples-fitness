@@ -51,22 +51,14 @@ namespace TruLife.API.Models
         public double? CurrentWeightKg { get; set; }
         public double? TargetWeightKg { get; set; }
         
-        [MaxLength(200)]
-        public string? FitnessGoal { get; set; } // Multiple goals comma-separated
+        [MaxLength(50)]
+        public string? FitnessGoal { get; set; } // "Weight Loss", "Muscle Gain", "Maintenance", etc.
         
         [MaxLength(50)]
         public string? ActivityLevel { get; set; } // "Sedentary", "Lightly Active", "Moderately Active", etc.
         
         // Dietary preferences (comma-separated)
         public string? DietaryPreferences { get; set; } // "Keto,Vegan,Gluten-Free"
-        
-        // Medical & Personal Information (CRITICAL for AI personalization)
-        [MaxLength(100)]
-        public string? Ethnicity { get; set; }
-        
-        public string? MedicalConditions { get; set; } // Comma-separated list
-        
-        public string? Medications { get; set; } // Comma-separated list
         
         // Couple relationship
         public int? CoupleProfileId { get; set; }
