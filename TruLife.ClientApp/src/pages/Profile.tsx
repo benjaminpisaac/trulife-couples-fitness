@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import { getProfile, updateProfile } from '../services/api';
@@ -152,7 +152,7 @@ const Profile = () => {
     return (
         <div className="page">
             <div className="page-header">
-                <h1 className="page-title">Profile ⚙️</h1>
+                <h1 className="page-title">Profile ΓÜÖ∩╕Å</h1>
                 <p className="text-gray">Manage your account and preferences</p>
             </div>
 
@@ -330,7 +330,7 @@ const Profile = () => {
 
                             <div style={{ borderTop: '2px solid #e5e7eb', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
                                 <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', color: '#374151' }}>
-                                    📋 Medical & Personal Information (Optional)
+                                    ≡ƒôï Medical & Personal Information (Optional)
                                 </h3>
                                 <p className="text-gray text-sm mb-3">
                                     This information helps personalize your experience
@@ -382,7 +382,7 @@ const Profile = () => {
 
                                 <div style={{ background: '#fef3c7', borderRadius: '8px', padding: '1rem', marginTop: '1rem' }}>
                                     <p style={{ fontSize: '0.85rem', color: '#78350f', margin: 0 }}>
-                                        <strong>💡 Note:</strong> This information is optional but helps our AI provide more personalized recommendations.
+                                        <strong>≡ƒÆí Note:</strong> This information is optional but helps our AI provide more personalized recommendations.
                                     </p>
                                 </div>
                             </div>
@@ -464,7 +464,7 @@ const Profile = () => {
                 </div>
 
                 <div className="card">
-                    <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>🏃 Health Data Sync</h2>
+                    <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>≡ƒÅâ Health Data Sync</h2>
                     <p className="text-gray text-sm mb-3">
                         Connect your fitness tracker to automatically sync activity, sleep, and health data
                     </p>
@@ -473,7 +473,7 @@ const Profile = () => {
 
                     <div style={{ marginTop: '1rem', padding: '1rem', background: '#f3f4f6', borderRadius: '8px' }}>
                         <p className="text-sm text-gray">
-                            📱 <strong>Coming Soon:</strong> Apple Health (iOS) and Google Fit (Android) integration
+                            ≡ƒô▒ <strong>Coming Soon:</strong> Apple Health (iOS) and Google Fit (Android) integration
                         </p>
                     </div>
                 </div>
@@ -488,7 +488,7 @@ const Profile = () => {
 
                 <div className="card">
                     <button className="btn w-full" onClick={handleLogout} style={{ background: '#ef4444', color: 'white' }}>
-                        🚪 Logout
+                        ≡ƒÜ¬ Logout
                     </button>
                 </div>
             </div>

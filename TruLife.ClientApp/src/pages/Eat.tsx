@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { getCurrentMacros, getTodaysMeals, analyzeMeal, logMeal, getProfile } from '../services/api';
 import DietaryPreferences from '../components/DietaryPreferences';
 import MealRecommendations from '../components/MealRecommendations';
@@ -108,7 +108,7 @@ const Eat = () => {
     return (
         <div className="page">
             <div className="page-header">
-                <h1 className="page-title">Eat 🍽️</h1>
+                <h1 className="page-title">Eat ≡ƒì╜∩╕Å</h1>
                 <p className="text-gray">Track your nutrition with AI</p>
             </div>
 
@@ -227,12 +227,12 @@ const Eat = () => {
 
                         {/* 7. Photo Upload */}
                         <div className="card">
-                            <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>📸 Log Meal with AI</h2>
+                            <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>≡ƒô╕ Log Meal with AI</h2>
                             <p className="text-gray mb-3">
                                 Take a photo of your meal and get instant macro estimates!
                             </p>
                             <label className="btn btn-primary w-full" style={{ cursor: 'pointer' }}>
-                                {analyzing ? 'Analyzing...' : '📷 Take Photo'}
+                                {analyzing ? 'Analyzing...' : '≡ƒô╖ Take Photo'}
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -264,7 +264,7 @@ const Eat = () => {
                                 className="btn btn-secondary"
                                 onClick={() => window.location.href = '/couples'}
                             >
-                                💑 Plan Romantic Dinner
+                                ≡ƒÆæ Plan Romantic Dinner
                             </button>
                             <button
                                 className="btn btn-outline"
@@ -274,7 +274,7 @@ const Eat = () => {
                             </button>
                             <button
                                 className="btn btn-outline"
-                                onClick={() => alert('View your partner\'s meal history and nutrition stats! Feature coming soon 🍽️')}
+                                onClick={() => alert('View your partner\'s meal history and nutrition stats! Feature coming soon ≡ƒì╜∩╕Å')}
                             >
                                 View Partner's Meals
                             </button>
