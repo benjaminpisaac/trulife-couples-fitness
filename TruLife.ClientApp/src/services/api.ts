@@ -18,6 +18,22 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+// Handle 401 errors (invalid/expired token)
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            // Clear invalid token
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+
+            // Redirect to login
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
 // Auth
 export const register = (data: any) => api.post('/auth/register', data);
 export const login = (data: any) => api.post('/auth/login', data);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getCurrentMacros, getTodaysMeals, analyzeMeal, logMeal } from '../services/api';
+import { getCurrentMacros, getTodaysMeals, analyzeMeal, logMeal, getProfile } from '../services/api';
 import DietaryPreferences from '../components/DietaryPreferences';
 import MealRecommendations from '../components/MealRecommendations';
 import LabFocusedMeals from '../components/LabFocusedMeals';
@@ -17,7 +17,21 @@ const Eat = () => {
 
     useEffect(() => {
         fetchData();
+        loadProfilePreferences();
     }, []);
+
+    const loadProfilePreferences = async () => {
+        try {
+            const response = await getProfile();
+            if (response.data.dietaryPreferences) {
+                // Use first preference if multiple are listed
+                const firstPref = response.data.dietaryPreferences.split(',')[0].trim().toLowerCase();
+                setDietaryPreference(firstPref);
+            }
+        } catch (error) {
+            console.error('Error loading profile preferences:', error);
+        }
+    };
 
     const fetchData = async () => {
         try {

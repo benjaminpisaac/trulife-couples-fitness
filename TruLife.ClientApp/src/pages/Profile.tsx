@@ -3,15 +3,56 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import { getProfile, updateProfile } from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import { FitbitConnect } from '../components/FitbitConnect';
 
 const Profile = () => {
     const [profile, setProfile] = useState<any>(null);
     const [editing, setEditing] = useState(false);
     const [formData, setFormData] = useState<any>({});
     const [loading, setLoading] = useState(true);
-    const [measurementSystem, setMeasurementSystem] = useState<'imperial' | 'metric'>('imperial'); // Default to imperial (US)
+    const [measurementSystem, setMeasurementSystem] = useState<'imperial' | 'metric'>('imperial');
+
+    // Separate state for imperial inputs to allow free typing
+    const [heightFeet, setHeightFeet] = useState('');
+    const [heightInches, setHeightInches] = useState('');
+    const [weightLbs, setWeightLbs] = useState('');
+    const [targetWeightLbs, setTargetWeightLbs] = useState('');
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const ethnicities = [
+        'African American / Black',
+        'Asian - Chinese',
+        'Asian - Filipino',
+        'Asian - Indian',
+        'Asian - Japanese',
+        'Asian - Korean',
+        'Asian - Vietnamese',
+        'Asian - Other',
+        'Hispanic / Latino - Mexican',
+        'Hispanic / Latino - Puerto Rican',
+        'Hispanic / Latino - Cuban',
+        'Hispanic / Latino - Other',
+        'Middle Eastern / North African',
+        'Native American / Alaska Native',
+        'Native Hawaiian / Pacific Islander',
+        'White / Caucasian',
+        'Mixed / Multiracial',
+        'Other',
+        'Prefer not to say'
+    ];
+
+    const fitnessGoals = [
+        'Weight Loss',
+        'Muscle Gain',
+        'Maintenance',
+        'Athletic Performance',
+        'General Fitness',
+        'Endurance',
+        'Strength',
+        'Flexibility'
+    ];
 
     useEffect(() => {
         fetchProfile();
@@ -22,6 +63,19 @@ const Profile = () => {
             const response = await getProfile();
             setProfile(response.data);
             setFormData(response.data);
+
+            // Initialize imperial values from metric data
+            if (response.data.heightCm) {
+                const totalInches = response.data.heightCm / 2.54;
+                setHeightFeet(Math.floor(totalInches / 12).toString());
+                setHeightInches(Math.round(totalInches % 12).toString());
+            }
+            if (response.data.currentWeightKg) {
+                setWeightLbs((response.data.currentWeightKg * 2.20462).toFixed(1));
+            }
+            if (response.data.targetWeightKg) {
+                setTargetWeightLbs((response.data.targetWeightKg * 2.20462).toFixed(1));
+            }
         } catch (error) {
             console.error('Error fetching profile:', error);
         } finally {
@@ -36,12 +90,40 @@ const Profile = () => {
         });
     };
 
+    const handleGoalToggle = (goal: string) => {
+        const currentGoals = formData.fitnessGoal?.split(',').map((g: string) => g.trim()).filter(Boolean) || [];
+        let newGoals;
+
+        if (currentGoals.includes(goal)) {
+            newGoals = currentGoals.filter((g: string) => g !== goal);
+        } else {
+            newGoals = [...currentGoals, goal];
+        }
+
+        setFormData({
+            ...formData,
+            fitnessGoal: newGoals.join(', ')
+        });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            await updateProfile(formData);
+            // Convert imperial to metric before saving
+            const dataToSave = { ...formData };
+
+            if (measurementSystem === 'imperial') {
+                const feet = parseInt(heightFeet) || 0;
+                const inches = parseInt(heightInches) || 0;
+                dataToSave.heightCm = (feet * 30.48) + (inches * 2.54);
+
+                dataToSave.currentWeightKg = parseFloat(weightLbs) / 2.20462 || 0;
+                dataToSave.targetWeightKg = parseFloat(targetWeightLbs) / 2.20462 || 0;
+            }
+
+            await updateProfile(dataToSave);
             await fetchProfile();
             setEditing(false);
             alert('Profile updated successfully!');
@@ -64,6 +146,8 @@ const Profile = () => {
             </div>
         );
     }
+
+    const selectedGoals = formData.fitnessGoal?.split(',').map((g: string) => g.trim()).filter(Boolean) || [];
 
     return (
         <div className="page">
@@ -109,41 +193,29 @@ const Profile = () => {
                                     Height {measurementSystem === 'imperial' ? '(ft/in)' : '(cm)'}
                                 </label>
                                 {measurementSystem === 'imperial' ? (
-                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                                         <input
                                             type="number"
                                             className="input"
-                                            value={Math.floor((formData.heightCm || 0) / 30.48)}
-                                            onChange={(e) => {
-                                                const feet = parseInt(e.target.value) || 0;
-                                                const inches = Math.round(((formData.heightCm || 0) / 2.54) % 12);
-                                                setFormData({
-                                                    ...formData,
-                                                    heightCm: (feet * 30.48) + (inches * 2.54)
-                                                });
-                                            }}
+                                            value={heightFeet}
+                                            onChange={(e) => setHeightFeet(e.target.value)}
                                             placeholder="5"
                                             min="0"
                                             max="8"
+                                            style={{ flex: 1 }}
                                         />
-                                        <span style={{ alignSelf: 'center', fontWeight: 600 }}>ft</span>
+                                        <span style={{ fontWeight: 600 }}>ft</span>
                                         <input
                                             type="number"
                                             className="input"
-                                            value={Math.round(((formData.heightCm || 0) / 2.54) % 12)}
-                                            onChange={(e) => {
-                                                const feet = Math.floor((formData.heightCm || 0) / 30.48);
-                                                const inches = parseInt(e.target.value) || 0;
-                                                setFormData({
-                                                    ...formData,
-                                                    heightCm: (feet * 30.48) + (inches * 2.54)
-                                                });
-                                            }}
-                                            placeholder="8"
+                                            value={heightInches}
+                                            onChange={(e) => setHeightInches(e.target.value)}
+                                            placeholder="10"
                                             min="0"
                                             max="11"
+                                            style={{ flex: 1 }}
                                         />
-                                        <span style={{ alignSelf: 'center', fontWeight: 600 }}>in</span>
+                                        <span style={{ fontWeight: 600 }}>in</span>
                                     </div>
                                 ) : (
                                     <input
@@ -161,67 +233,69 @@ const Profile = () => {
                                 <label className="label">
                                     Current Weight {measurementSystem === 'imperial' ? '(lbs)' : '(kg)'}
                                 </label>
-                                <input
-                                    type="number"
-                                    name="currentWeightKg"
-                                    className="input"
-                                    value={
-                                        measurementSystem === 'imperial'
-                                            ? (formData.currentWeightKg * 2.20462).toFixed(1)
-                                            : formData.currentWeightKg || ''
-                                    }
-                                    onChange={(e) => {
-                                        const value = parseFloat(e.target.value);
-                                        setFormData({
-                                            ...formData,
-                                            currentWeightKg: measurementSystem === 'imperial' ? value / 2.20462 : value
-                                        });
-                                    }}
-                                    placeholder={measurementSystem === 'imperial' ? '154' : '70'}
-                                    step="0.1"
-                                />
+                                {measurementSystem === 'imperial' ? (
+                                    <input
+                                        type="number"
+                                        className="input"
+                                        value={weightLbs}
+                                        onChange={(e) => setWeightLbs(e.target.value)}
+                                        placeholder="185.5"
+                                        step="0.1"
+                                    />
+                                ) : (
+                                    <input
+                                        type="number"
+                                        name="currentWeightKg"
+                                        className="input"
+                                        value={formData.currentWeightKg || ''}
+                                        onChange={handleChange}
+                                        placeholder="70"
+                                        step="0.1"
+                                    />
+                                )}
                             </div>
 
                             <div className="form-group">
                                 <label className="label">
                                     Target Weight {measurementSystem === 'imperial' ? '(lbs)' : '(kg)'}
                                 </label>
-                                <input
-                                    type="number"
-                                    name="targetWeightKg"
-                                    className="input"
-                                    value={
-                                        measurementSystem === 'imperial'
-                                            ? (formData.targetWeightKg * 2.20462).toFixed(1)
-                                            : formData.targetWeightKg || ''
-                                    }
-                                    onChange={(e) => {
-                                        const value = parseFloat(e.target.value);
-                                        setFormData({
-                                            ...formData,
-                                            targetWeightKg: measurementSystem === 'imperial' ? value / 2.20462 : value
-                                        });
-                                    }}
-                                    placeholder={measurementSystem === 'imperial' ? '143' : '65'}
-                                    step="0.1"
-                                />
+                                {measurementSystem === 'imperial' ? (
+                                    <input
+                                        type="number"
+                                        className="input"
+                                        value={targetWeightLbs}
+                                        onChange={(e) => setTargetWeightLbs(e.target.value)}
+                                        placeholder="175.0"
+                                        step="0.1"
+                                    />
+                                ) : (
+                                    <input
+                                        type="number"
+                                        name="targetWeightKg"
+                                        className="input"
+                                        value={formData.targetWeightKg || ''}
+                                        onChange={handleChange}
+                                        placeholder="65"
+                                        step="0.1"
+                                    />
+                                )}
                             </div>
 
                             <div className="form-group">
-                                <label className="label">Fitness Goal</label>
-                                <select
-                                    name="fitnessGoal"
-                                    className="input"
-                                    value={formData.fitnessGoal || ''}
-                                    onChange={handleChange}
-                                >
-                                    <option value="">Select a goal</option>
-                                    <option value="Weight Loss">Weight Loss</option>
-                                    <option value="Muscle Gain">Muscle Gain</option>
-                                    <option value="Maintenance">Maintenance</option>
-                                    <option value="Athletic Performance">Athletic Performance</option>
-                                    <option value="General Fitness">General Fitness</option>
-                                </select>
+                                <label className="label">Fitness Goals (Select all that apply)</label>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    {fitnessGoals.map(goal => (
+                                        <label key={goal} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedGoals.includes(goal)}
+                                                onChange={() => handleGoalToggle(goal)}
+                                                style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                                            />
+                                            <span>{goal}</span>
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
 
                             <div className="form-group">
@@ -254,25 +328,27 @@ const Profile = () => {
                                 <p className="text-gray text-sm mt-1">Separate multiple preferences with commas</p>
                             </div>
 
-                            {/* Medical & Personal Data Section */}
                             <div style={{ borderTop: '2px solid #e5e7eb', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
                                 <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', color: '#374151' }}>
                                     📋 Medical & Personal Information (Optional)
                                 </h3>
                                 <p className="text-gray text-sm mb-3">
-                                    This information helps personalize your experience without DNA or lab data
+                                    This information helps personalize your experience
                                 </p>
 
                                 <div className="form-group">
                                     <label className="label">Ethnicity</label>
-                                    <input
-                                        type="text"
+                                    <select
                                         name="ethnicity"
                                         className="input"
                                         value={formData.ethnicity || ''}
                                         onChange={handleChange}
-                                        placeholder="e.g., African American, Hispanic, Asian, etc."
-                                    />
+                                    >
+                                        <option value="">Select ethnicity</option>
+                                        {ethnicities.map(eth => (
+                                            <option key={eth} value={eth}>{eth}</option>
+                                        ))}
+                                    </select>
                                     <p className="text-gray text-sm mt-1">Helps with culturally-relevant meal recommendations</p>
                                 </div>
 
@@ -307,7 +383,6 @@ const Profile = () => {
                                 <div style={{ background: '#fef3c7', borderRadius: '8px', padding: '1rem', marginTop: '1rem' }}>
                                     <p style={{ fontSize: '0.85rem', color: '#78350f', margin: 0 }}>
                                         <strong>💡 Note:</strong> This information is optional but helps our AI provide more personalized recommendations.
-                                        DNA and lab data can be added separately for even more precise guidance.
                                     </p>
                                 </div>
                             </div>
@@ -332,18 +407,36 @@ const Profile = () => {
                         <div className="flex flex-col gap-3">
                             <div>
                                 <div className="text-gray text-sm">Height</div>
-                                <div style={{ fontWeight: 600 }}>{profile?.heightCm ? `${profile.heightCm} cm` : 'Not set'}</div>
+                                <div style={{ fontWeight: 600 }}>
+                                    {profile?.heightCm ? (
+                                        measurementSystem === 'imperial'
+                                            ? `${Math.floor(profile.heightCm / 30.48)}' ${Math.round((profile.heightCm / 2.54) % 12)}"`
+                                            : `${profile.heightCm} cm`
+                                    ) : 'Not set'}
+                                </div>
                             </div>
                             <div>
                                 <div className="text-gray text-sm">Current Weight</div>
-                                <div style={{ fontWeight: 600 }}>{profile?.currentWeightKg ? `${profile.currentWeightKg} kg` : 'Not set'}</div>
+                                <div style={{ fontWeight: 600 }}>
+                                    {profile?.currentWeightKg ? (
+                                        measurementSystem === 'imperial'
+                                            ? `${(profile.currentWeightKg * 2.20462).toFixed(1)} lbs`
+                                            : `${profile.currentWeightKg} kg`
+                                    ) : 'Not set'}
+                                </div>
                             </div>
                             <div>
                                 <div className="text-gray text-sm">Target Weight</div>
-                                <div style={{ fontWeight: 600 }}>{profile?.targetWeightKg ? `${profile.targetWeightKg} kg` : 'Not set'}</div>
+                                <div style={{ fontWeight: 600 }}>
+                                    {profile?.targetWeightKg ? (
+                                        measurementSystem === 'imperial'
+                                            ? `${(profile.targetWeightKg * 2.20462).toFixed(1)} lbs`
+                                            : `${profile.targetWeightKg} kg`
+                                    ) : 'Not set'}
+                                </div>
                             </div>
                             <div>
-                                <div className="text-gray text-sm">Fitness Goal</div>
+                                <div className="text-gray text-sm">Fitness Goals</div>
                                 <div style={{ fontWeight: 600 }}>{profile?.fitnessGoal || 'Not set'}</div>
                             </div>
                             <div>
@@ -368,6 +461,21 @@ const Profile = () => {
                             </div>
                         </div>
                     )}
+                </div>
+
+                <div className="card">
+                    <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>🏃 Health Data Sync</h2>
+                    <p className="text-gray text-sm mb-3">
+                        Connect your fitness tracker to automatically sync activity, sleep, and health data
+                    </p>
+
+                    <FitbitConnect />
+
+                    <div style={{ marginTop: '1rem', padding: '1rem', background: '#f3f4f6', borderRadius: '8px' }}>
+                        <p className="text-sm text-gray">
+                            📱 <strong>Coming Soon:</strong> Apple Health (iOS) and Google Fit (Android) integration
+                        </p>
+                    </div>
                 </div>
 
                 <div className="card">
