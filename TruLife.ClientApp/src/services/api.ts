@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://trulife-couples-fitness.onrender.com/api';
+const API_BASE_URL = 'https://trulife-api-production.up.railway.app/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
