@@ -9,4 +9,4 @@ cmds = ["cd TruLife.API && dotnet restore"]
 cmds = ["cd TruLife.API && dotnet publish -c Release -o out"]
 
 [phases.start]
-cmd = "cd TruLife.API && dotnet out/TruLife.API.dll"
+cmd = "cd TruLife.API/out && dotnet TruLife.API.dll"
