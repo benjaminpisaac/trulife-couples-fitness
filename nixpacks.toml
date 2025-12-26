@@ -1,6 +1,4 @@
 # Nixpacks configuration for .NET 8
-providers = ["dotnet"]
-
 [phases.setup]
 nixPkgs = ["dotnet-sdk_8"]
 
