@@ -51,14 +51,22 @@ namespace TruLife.API.Models
         public double? CurrentWeightKg { get; set; }
         public double? TargetWeightKg { get; set; }
         
-        [MaxLength(50)]
-        public string? FitnessGoal { get; set; } // "Weight Loss", "Muscle Gain", "Maintenance", etc.
+        [MaxLength(200)]
+        public string? FitnessGoal { get; set; }
         
         [MaxLength(50)]
-        public string? ActivityLevel { get; set; } // "Sedentary", "Lightly Active", "Moderately Active", etc.
+        public string? ActivityLevel { get; set; }
         
         // Dietary preferences (comma-separated)
-        public string? DietaryPreferences { get; set; } // "Keto,Vegan,Gluten-Free"
+        public string? DietaryPreferences { get; set; }
+        
+        // Medical fields (already exist in Render database from previous migration)
+        [MaxLength(100)]
+        public string? Ethnicity { get; set; }
+        
+        public string? MedicalConditions { get; set; }
+        
+        public string? Medications { get; set; }
         
         // Couple relationship
         public int? CoupleProfileId { get; set; }
