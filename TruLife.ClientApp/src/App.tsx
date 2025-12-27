@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from './store';
@@ -16,16 +15,9 @@ import Recovery from './pages/Recovery';
 import Coaching from './pages/Coaching';
 import Programs from './pages/Programs';
 import MobileNav from './components/MobileNav';
-import ServerWakeup from './components/ServerWakeup';
 
 function App() {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-    const [serverReady, setServerReady] = useState(false);
-
-    // Show wakeup screen until server is ready
-    if (!serverReady) {
-        return <ServerWakeup onReady={() => setServerReady(true)} />;
-    }
 
     return (
         <div className="app">
@@ -51,4 +43,5 @@ function App() {
 }
 
 export default App;
+
 
