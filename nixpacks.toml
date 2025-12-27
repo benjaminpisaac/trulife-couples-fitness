@@ -3,10 +3,10 @@
 nixPkgs = ["dotnet-sdk_8"]
 
 [phases.install]
-cmds = ["cd TruLife.API && dotnet restore"]
+cmds = ["dotnet restore"]
 
 [phases.build]
-cmds = ["cd TruLife.API && dotnet publish -c Release -o out"]
+cmds = ["dotnet publish -c Release -o out --self-contained true -r linux-x64"]
 
 [phases.start]
-cmd = "cd TruLife.API/out && dotnet TruLife.API.dll"
+cmd = "./out/TruLife.API"
