@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getApiUrl } from '../services/api';
 import './ServerWakeup.css';
 
 interface ServerWakeupProps {
@@ -7,7 +8,7 @@ interface ServerWakeupProps {
 
 const ServerWakeup = ({ onReady }: ServerWakeupProps) => {
     const [progress, setProgress] = useState(0);
-    const API_URL = 'https://trulife-couples-fitness.onrender.com/api/test/health';
+    const API_URL = getApiUrl('/api/test/health');
 
     useEffect(() => {
         // Simulate progress while pinging

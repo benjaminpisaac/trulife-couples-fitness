@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../store/slices/authSlice';
 import { register as registerApi } from '../services/api';
@@ -116,11 +116,11 @@ const Register = () => {
                     </button>
                 </form>
 
-                <p className="text-center mt-3">
+                <p style={{ marginTop: '1.5rem', textAlign: 'center', color: '#6b7280' }}>
                     Already have an account?{' '}
-                    <a href="/login" className="text-primary" style={{ fontWeight: 600 }}>
-                        Log in
-                    </a>
+                    <Link to="/login" className="text-primary" style={{ fontWeight: 600 }}>
+                        Login
+                    </Link>
                 </p>
             </div>
         </div>

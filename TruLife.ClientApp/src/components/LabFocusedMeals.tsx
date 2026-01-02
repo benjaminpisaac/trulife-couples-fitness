@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Sparkles, Loader } from 'lucide-react';
+import { getApiUrl } from '../services/api';
 
 interface LabFocusedMeal {
     name: string;
@@ -40,7 +41,7 @@ export default function LabFocusedMeals({ labResults }: LabFocusedMealsProps) {
         try {
             // In production, this would call the AI service with actual lab results
             // For now, we'll simulate the generation
-            const response = await fetch('/api/nutrition/lab-focused-meals', {
+            const response = await fetch(getApiUrl('/api/nutrition/lab-focused-meals'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -102,8 +103,8 @@ export default function LabFocusedMeals({ labResults }: LabFocusedMealsProps) {
                                 <button
                                     key={bio.value}
                                     className={`p-3 rounded-lg border-2 transition-all ${selectedBiomarker === bio.value
-                                            ? 'border-purple-500 bg-purple-50'
-                                            : 'border-gray-200 hover:border-purple-300'
+                                        ? 'border-purple-500 bg-purple-50'
+                                        : 'border-gray-200 hover:border-purple-300'
                                         }`}
                                     onClick={() => setSelectedBiomarker(bio.value)}
                                 >

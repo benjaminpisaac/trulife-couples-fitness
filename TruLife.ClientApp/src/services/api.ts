@@ -1,6 +1,52 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://trulife-couples-fitness.onrender.com/api';
+export const API_BASE_URL = (() => {
+    // 1. Check if we're on a public domain (Vercel, Azure, Render)
+    const hostname = window.location.hostname;
+    const isPublic = hostname.endsWith('.vercel.app') ||
+        hostname.endsWith('.azurewebsites.net') ||
+        hostname.endsWith('.onrender.com');
+
+    // 2. Determine base URL
+    let url = import.meta.env.VITE_API_BASE_URL;
+
+    if (isPublic && !url) {
+        // Fallback to production Render URL if on public domain and no env var
+        if (hostname.endsWith('.azurewebsites.net')) {
+            // Smart detect for Azure Web Apps: trulife-app-1234 becomes trulife-api-1234
+            url = 'https://' + hostname.replace('-app-', '-api-') + '/api';
+        } else if (hostname.endsWith('.azurestaticapps.net')) {
+            // Explicit fallback for Azure Static Web Apps to our new Central US backend
+            url = 'https://trulife-api-central-6947.azurewebsites.net/api';
+        } else {
+            url = 'https://trulife-couples-fitness.onrender.com/api';
+        }
+    } else if (!url) {
+        // Local development fallback
+        url = `http://${hostname}:5000/api`;
+    }
+
+    // 3. Normalize
+    if (url.endsWith('/')) url = url.slice(0, -1);
+    if (!url.toLowerCase().endsWith('/api')) {
+        url += '/api';
+    }
+
+    return url;
+})();
+
+// Helper function for components using fetch() instead of axios
+export const getApiUrl = (endpoint: string) => {
+    // Remove /api prefix from the endpoint if it exists
+    let clean = endpoint;
+    if (clean.toLowerCase().startsWith('/api/')) clean = clean.slice(4);
+    else if (clean.toLowerCase().startsWith('api/')) clean = clean.slice(3);
+
+    // Ensure leading slash
+    if (!clean.startsWith('/')) clean = '/' + clean;
+
+    return `${API_BASE_URL}${clean}`;
+};
 
 const api = axios.create({
     baseURL: API_BASE_URL,

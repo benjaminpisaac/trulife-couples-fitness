@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getApiUrl } from '../services/api';
 
 const Recovery = () => {
     const [loading, setLoading] = useState(true);
@@ -39,7 +40,7 @@ const Recovery = () => {
 
     const fetchToolHistory = async () => {
         try {
-            const response = await fetch('/api/recovery/tools/history?days=7', {
+            const response = await fetch(getApiUrl('/api/recovery/tools/history?days=7'), {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             if (response.ok) {
@@ -53,7 +54,7 @@ const Recovery = () => {
 
     const fetchStats = async () => {
         try {
-            const response = await fetch('/api/recovery/tools/stats', {
+            const response = await fetch(getApiUrl('/api/recovery/tools/stats'), {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             if (response.ok) {
@@ -76,7 +77,7 @@ const Recovery = () => {
 
     const handleLogSession = async () => {
         try {
-            const response = await fetch('/api/recovery/tool', {
+            const response = await fetch(getApiUrl('/api/recovery/tool'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

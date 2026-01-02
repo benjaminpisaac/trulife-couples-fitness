@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Camera } from 'lucide-react';
+import { getApiUrl } from '../services/api';
 
 interface EquipmentAnalysisProps {
     onAnalysisComplete: (equipment: string[], spaceAssessment: string) => void;
@@ -24,7 +25,7 @@ export default function EquipmentAnalysis({ onAnalysisComplete }: EquipmentAnaly
                 const base64Data = base64.split(',')[1];
 
                 // Call API
-                const response = await fetch('/api/equipment/analyze', {
+                const response = await fetch(getApiUrl('/api/equipment/analyze'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

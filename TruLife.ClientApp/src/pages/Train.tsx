@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { generateWorkout, createWorkoutSession, analyzeEquipment } from '../services/api';
 
 const Train = () => {
+    const navigate = useNavigate();
     const [mode, setMode] = useState<'individual' | 'couples'>('individual');
     const [generatedWorkout, setGeneratedWorkout] = useState<any>(null);
     const [loading, setLoading] = useState(false);
@@ -15,7 +17,13 @@ const Train = () => {
                 useReadinessScore: true
             });
 
-            const workoutData = JSON.parse(response.data.workout);
+            // Strip markdown code blocks if present
+            let workoutJson = response.data.workout;
+            if (workoutJson.startsWith('```')) {
+                workoutJson = workoutJson.replace(/^```json\n?/, '').replace(/\n?```$/, '');
+            }
+
+            const workoutData = JSON.parse(workoutJson);
             setGeneratedWorkout(workoutData);
         } catch (error) {
             console.error('Error generating workout:', error);
@@ -239,7 +247,7 @@ const Train = () => {
                         <div className="flex flex-col gap-2">
                             <button
                                 className="btn btn-secondary"
-                                onClick={() => window.location.href = '/couples'}
+                                onClick={() => navigate('/couples')}
                             >
                                 Create Workout Challenge
                             </button>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getApiUrl } from '../services/api';
 
 interface Restaurant {
     restaurantType: string;
@@ -76,7 +77,7 @@ export default function RestaurantFinder({
             }
 
             // Call the backend API
-            const response = await fetch('http://localhost:5000/api/restaurant/search', {
+            const response = await fetch(getApiUrl('/api/restaurant/search'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

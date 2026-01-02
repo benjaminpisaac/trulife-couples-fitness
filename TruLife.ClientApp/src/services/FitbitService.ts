@@ -1,4 +1,5 @@
 // Web-compatible Fitbit Service (Capacitor imports removed for Vercel build)
+import { getApiUrl } from './api';
 // Note: Full native functionality requires Capacitor plugins
 
 const FITBIT_CLIENT_ID = import.meta.env.VITE_FITBIT_CLIENT_ID || 'YOUR_FITBIT_CLIENT_ID';
@@ -202,7 +203,7 @@ export class FitbitService {
             ]);
 
             // Send to your backend
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/fitbit/sync`, {
+            const response = await fetch(getApiUrl('/api/fitbit/sync'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

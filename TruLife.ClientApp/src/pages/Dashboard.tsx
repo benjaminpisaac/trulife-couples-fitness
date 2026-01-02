@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { getProfile, getLatestReadiness } from '../services/api';
+import { Link } from 'react-router-dom';
+import { getProfile, getLatestReadiness, getTodaysMeals, getCurrentMacros } from '../services/api';
 import ReadinessCheckIn from '../components/ReadinessCheckIn';
 
 const kgToLbs = (kg: number) => Math.round(kg * 2.20462);
@@ -118,18 +119,18 @@ const Dashboard = () => {
                 <div className="card">
                     <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Quick Actions</h2>
                     <div className="grid grid-cols-2 gap-2">
-                        <a href="/train" className="btn btn-primary">
+                        <Link to="/train" className="btn btn-primary">
                             💪 Start Workout
-                        </a>
-                        <a href="/eat" className="btn btn-secondary">
+                        </Link>
+                        <Link to="/eat" className="btn btn-secondary">
                             🍽️ Log Meal
-                        </a>
-                        <a href="/couples" className="btn btn-outline">
+                        </Link>
+                        <Link to="/couples" className="btn btn-outline">
                             💑 Couples Mode
-                        </a>
-                        <a href="/profile" className="btn btn-outline">
+                        </Link>
+                        <Link to="/profile" className="btn btn-outline">
                             ⚙️ Settings
-                        </a>
+                        </Link>
                     </div>
                 </div>
 
@@ -138,9 +139,9 @@ const Dashboard = () => {
                     <div className="card" style={{ background: '#fef3c7', border: '2px solid #f59e0b' }}>
                         <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Complete Your Profile</h3>
                         <p className="text-gray mb-2">Set up your fitness goals and preferences to get personalized recommendations!</p>
-                        <a href="/profile" className="btn btn-primary">
+                        <Link to="/profile" className="btn btn-primary">
                             Complete Profile
-                        </a>
+                        </Link>
                     </div>
                 )}
 

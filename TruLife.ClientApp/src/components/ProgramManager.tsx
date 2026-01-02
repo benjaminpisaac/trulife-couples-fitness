@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Play, Trash2 } from 'lucide-react';
+import { getApiUrl } from '../services/api';
 
 interface WorkoutProgram {
     id: number;
@@ -35,7 +36,7 @@ export default function ProgramManager() {
 
     const loadPrograms = async () => {
         try {
-            const response = await fetch('/api/workoutprogram', {
+            const response = await fetch(getApiUrl('/api/workoutprogram'), {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -57,7 +58,7 @@ export default function ProgramManager() {
 
         setGenerating(true);
         try {
-            const response = await fetch('/api/workoutprogram/generate', {
+            const response = await fetch(getApiUrl('/api/workoutprogram/generate'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -92,7 +93,7 @@ export default function ProgramManager() {
         if (!confirm('Delete this program?')) return;
 
         try {
-            const response = await fetch(`/api/workoutprogram/${id}`, {
+            const response = await fetch(getApiUrl(`/api/workoutprogram/${id}`), {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -109,7 +110,7 @@ export default function ProgramManager() {
 
     const viewProgram = async (id: number) => {
         try {
-            const response = await fetch(`/api/workoutprogram/${id}`, {
+            const response = await fetch(getApiUrl(`/api/workoutprogram/${id}`), {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }

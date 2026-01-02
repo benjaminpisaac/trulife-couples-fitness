@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Trash2 } from 'lucide-react';
+import { getApiUrl } from '../services/api';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -34,7 +35,7 @@ export default function AICoachChat({ coachType, title, icon }: AICoachChatProps
 
     const loadHistory = async () => {
         try {
-            const response = await fetch(`/api/coaching/history/${coachType}`, {
+            const response = await fetch(getApiUrl(`/api/coaching/history/${coachType}`), {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -67,7 +68,7 @@ export default function AICoachChat({ coachType, title, icon }: AICoachChatProps
         setMessages([...messages, newUserMessage]);
 
         try {
-            const response = await fetch('/api/coaching/message', {
+            const response = await fetch(getApiUrl('/api/coaching/message'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -107,7 +108,7 @@ export default function AICoachChat({ coachType, title, icon }: AICoachChatProps
         if (!confirm('Clear all conversation history?')) return;
 
         try {
-            const response = await fetch(`/api/coaching/history/${coachType}`, {
+            const response = await fetch(getApiUrl(`/api/coaching/history/${coachType}`), {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -191,8 +192,8 @@ export default function AICoachChat({ coachType, title, icon }: AICoachChatProps
                         >
                             <div
                                 className={`max-w-[80%] rounded-lg p-3 ${msg.role === 'user'
-                                        ? 'bg-primary text-white'
-                                        : 'bg-gray-100 text-gray-900'
+                                    ? 'bg-primary text-white'
+                                    : 'bg-gray-100 text-gray-900'
                                     }`}
                             >
                                 <p className="whitespace-pre-wrap">{msg.content}</p>

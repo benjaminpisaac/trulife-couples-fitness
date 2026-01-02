@@ -27,7 +27,7 @@ Write-Host "Configuring Frontend..." -ForegroundColor Yellow
 Set-Location "$projectPath\TruLife.ClientApp"
 
 # Create .env.local with your IP
-$envContent = "VITE_API_BASE_URL=http://${ipAddress}:5000"
+$envContent = "VITE_API_BASE_URL=http://${ipAddress}:5000/api"
 Set-Content ".env.local" $envContent
 
 # Start Frontend

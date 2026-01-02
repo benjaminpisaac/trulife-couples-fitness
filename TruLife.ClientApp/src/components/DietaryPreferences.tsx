@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
+import { getApiUrl } from '../services/api';
 
 const DIETARY_PREFERENCES = [
     { value: 'none', label: 'No Restrictions', description: 'Standard balanced diet', emoji: '🍽️' },
@@ -34,7 +35,7 @@ export default function DietaryPreferences({ currentPreference = 'none', onSelec
 
         try {
             // Update profile with dietary preference
-            const response = await fetch('/api/profile', {
+            const response = await fetch(getApiUrl('/api/profile'), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

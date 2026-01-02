@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChefHat, RefreshCw } from 'lucide-react';
+import { getApiUrl } from '../services/api';
 
 interface MealRecommendation {
     name: string;
@@ -37,7 +38,7 @@ export default function MealRecommendations({
     const generateRecommendations = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/api/nutrition/recommendations', {
+            const response = await fetch(getApiUrl('/api/nutrition/recommendations'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -98,7 +99,7 @@ export default function MealRecommendations({
 
     const logMeal = async (meal: MealRecommendation) => {
         try {
-            const response = await fetch('/api/nutrition/meals', {
+            const response = await fetch(getApiUrl('/api/nutrition/meals'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

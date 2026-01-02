@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getProfile, getLatestReadiness, getTodaysMeals, getCurrentMacros } from '../services/api';
 import ReadinessCheckIn from '../components/ReadinessCheckIn';
 import HydrationTracker from '../components/HydrationTracker';
@@ -124,18 +125,18 @@ const Today = () => {
                 <div className="card">
                     <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Quick Actions</h2>
                     <div className="grid grid-cols-2 gap-2">
-                        <a href="/train" className="btn btn-primary">
+                        <Link to="/train" className="btn btn-primary">
                             💪 Start Workout
-                        </a>
-                        <a href="/eat" className="btn btn-secondary">
+                        </Link>
+                        <Link to="/eat" className="btn btn-secondary">
                             🍽️ Log Meal
-                        </a>
-                        <a href="/couples" className="btn btn-outline">
+                        </Link>
+                        <Link to="/couples" className="btn btn-outline">
                             💑 Couples Mode
-                        </a>
-                        <a href="/profile" className="btn btn-outline">
+                        </Link>
+                        <Link to="/profile" className="btn btn-outline">
                             ⚙️ Settings
-                        </a>
+                        </Link>
                     </div>
                 </div>
 

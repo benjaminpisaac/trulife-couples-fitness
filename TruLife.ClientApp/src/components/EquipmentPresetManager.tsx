@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Star, Trash2, Plus } from 'lucide-react';
+import { getApiUrl } from '../services/api';
 
 interface EquipmentPreset {
     id: number;
@@ -28,7 +29,7 @@ export default function EquipmentPresetManager({ onSelectPreset }: EquipmentPres
 
     const loadPresets = async () => {
         try {
-            const response = await fetch('/api/equipment/presets', {
+            const response = await fetch(getApiUrl('/api/equipment/presets'), {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -49,7 +50,7 @@ export default function EquipmentPresetManager({ onSelectPreset }: EquipmentPres
         if (!newPresetName.trim()) return;
 
         try {
-            const response = await fetch('/api/equipment/presets', {
+            const response = await fetch(getApiUrl('/api/equipment/presets'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ export default function EquipmentPresetManager({ onSelectPreset }: EquipmentPres
 
     const toggleFavorite = async (id: number) => {
         try {
-            const response = await fetch(`/api/equipment/presets/${id}/favorite`, {
+            const response = await fetch(getApiUrl(`/api/equipment/presets/${id}/favorite`), {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -96,7 +97,7 @@ export default function EquipmentPresetManager({ onSelectPreset }: EquipmentPres
         if (!confirm('Delete this preset?')) return;
 
         try {
-            const response = await fetch(`/api/equipment/presets/${id}`, {
+            const response = await fetch(getApiUrl(`/api/equipment/presets/${id}`), {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

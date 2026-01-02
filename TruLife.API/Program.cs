@@ -78,6 +78,8 @@ builder.Services.AddCors(options =>
                 "http://localhost:3000",
                 "https://localhost:5173",
                 "https://localhost:3000",
+                "http://10.0.0.101:5173",
+                "http://10.0.0.228:5173",
                 "https://trulife-couples-fitness.vercel.app"
             )
             .AllowAnyHeader()
@@ -157,7 +159,7 @@ app.Use(async (context, next) =>
     await next();
 });
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Disabled for local development
 app.UseResponseCompression();
 app.UseRateLimiter();
 

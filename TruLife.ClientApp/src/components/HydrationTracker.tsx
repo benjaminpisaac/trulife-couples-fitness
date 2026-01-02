@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Droplet, Plus } from 'lucide-react';
+import { getApiUrl } from '../services/api';
 
 const QUICK_ADD_AMOUNTS = [250, 500, 750, 1000]; // ml
 const DAILY_GOAL = 2500; // ml (adjust based on user settings)
@@ -15,7 +16,7 @@ export default function HydrationTracker() {
 
     const loadTodayTotal = async () => {
         try {
-            const response = await fetch('/api/hydration/today', {
+            const response = await fetch(getApiUrl('/api/hydration/today'), {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -34,7 +35,7 @@ export default function HydrationTracker() {
 
     const logHydration = async (amount: number) => {
         try {
-            const response = await fetch('/api/hydration/log', {
+            const response = await fetch(getApiUrl('/api/hydration/log'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
