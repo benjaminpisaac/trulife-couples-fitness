@@ -26,9 +26,9 @@ jobs:
           azure_static_web_apps_api_token: 9dcd51e76b03bef8547585d93c891d97fac0f2cc5324caa41b285dd1da42540503-2067df72-79dd-4ba7-8f29-b0f7c0b82a3c00f311102570af0f
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          skip_app_build: true
+          skip_app_build: false
           app_location: "TruLife.ClientApp"
-          api_location: "TruLife.API"
+          api_location: ""
           output_location: "dist"
 
   close_pull_request_job:
