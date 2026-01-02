@@ -5,6 +5,7 @@ export const API_BASE_URL = (() => {
     const hostname = window.location.hostname;
     const isPublic = hostname.endsWith('.vercel.app') ||
         hostname.endsWith('.azurewebsites.net') ||
+        hostname.endsWith('.azurestaticapps.net') ||
         hostname.endsWith('.onrender.com');
 
     // 2. Determine base URL
