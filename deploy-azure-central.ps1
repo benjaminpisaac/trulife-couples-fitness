@@ -28,7 +28,7 @@ az webapp config appsettings set --resource-group $resourceGroup --name $backend
     "Jwt__Key=$jwtSecret" `
     "Jwt__Issuer=TruLifeAPI" `
     "Jwt__Audience=TruLifeClient" `
-    "ConnectionStrings__DefaultConnection=Data Source=trulife.db"
+    "ConnectionStrings__DefaultConnection=Data Source=D:\home\trulife_persistent.db"
 
 Write-Host "Step 4: Building and Publishing Backend..." -ForegroundColor Green
 dotnet publish TruLife.API/TruLife.API.csproj -c Release -o ./publish

@@ -134,6 +134,8 @@ namespace TruLife.API.Controllers
                 if (!string.IsNullOrEmpty(request.DietaryPreferences))
                     user.Profile.DietaryPreferences = request.DietaryPreferences;
                 
+                _logger.LogInformation($"Update request for user {userId}: Ethnicity={request.Ethnicity}, Meds={request.Medications}, Goals={request.FitnessGoal}");
+
                 if (!string.IsNullOrEmpty(request.Ethnicity))
                     user.Profile.Ethnicity = request.Ethnicity;
                 

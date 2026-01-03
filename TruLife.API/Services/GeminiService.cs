@@ -450,13 +450,22 @@ Only return the JSON object, no additional text.";
             return cleaned.Trim();
         }
 
-        private async Task<string> CallGeminiVision(string prompt, string base64Image)
+                private async Task<string> CallGeminiVision(string prompt, string base64Image)
         {
             // Strip base64 prefix if present (e.g. "data:image/jpeg;base64,")
             var cleanBase64 = base64Image;
+            var mimeType = "image/jpeg"; // Default
+            
             if (cleanBase64.Contains(","))
             {
-                cleanBase64 = cleanBase64.Split(',')[1];
+                var parts = cleanBase64.Split(',');
+                var prefix = parts[0];
+                cleanBase64 = parts[1];
+                
+                // Detect mime type
+                if (prefix.Contains("image/png")) mimeType = "image/png";
+                else if (prefix.Contains("image/webp")) mimeType = "image/webp";
+                else if (prefix.Contains("image/gif")) mimeType = "image/gif";
             }
 
             var requestBody = new
@@ -472,7 +481,7 @@ Only return the JSON object, no additional text.";
                             {
                                 inline_data = new
                                 {
-                                    mime_type = "image/jpeg",
+                                    mime_type = mimeType,
                                     data = cleanBase64
                                 }
                             }
@@ -480,7 +489,7 @@ Only return the JSON object, no additional text.";
                     }
                 }
             };
-            
+
             var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}?key={_apiKey}", requestBody);
             response.EnsureSuccessStatusCode();
             
@@ -493,7 +502,7 @@ Only return the JSON object, no additional text.";
             
             return CleanJsonResponse(text ?? string.Empty);
         }
-        
+
         public async Task<T?> GenerateContentAsync<T>(string prompt) where T : class
         {
             try
