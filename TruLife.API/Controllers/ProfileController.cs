@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TruLife.API.Data;
@@ -63,7 +63,10 @@ namespace TruLife.API.Controllers
                 TargetWeightKg = user.Profile.TargetWeightKg,
                 FitnessGoal = user.Profile.FitnessGoal,
                 ActivityLevel = user.Profile.ActivityLevel,
-                DietaryPreferences = user.Profile.DietaryPreferences,
+                    DietaryPreferences = user.Profile.DietaryPreferences,
+                    Ethnicity = user.Profile.Ethnicity,
+                    MedicalConditions = user.Profile.MedicalConditions,
+                    Medications = user.Profile.Medications,
                 Ethnicity = user.Profile.Ethnicity,
                 MedicalConditions = user.Profile.MedicalConditions,
                 Medications = user.Profile.Medications,
@@ -163,6 +166,9 @@ namespace TruLife.API.Controllers
                     FitnessGoal = user.Profile.FitnessGoal,
                     ActivityLevel = user.Profile.ActivityLevel,
                     DietaryPreferences = user.Profile.DietaryPreferences,
+                    Ethnicity = user.Profile.Ethnicity,
+                    MedicalConditions = user.Profile.MedicalConditions,
+                    Medications = user.Profile.Medications,
                     CoupleProfileId = user.Profile.CoupleProfileId
                 });
             }
@@ -235,6 +241,9 @@ namespace TruLife.API.Controllers
                     FitnessGoal = user.Profile.FitnessGoal,
                     ActivityLevel = user.Profile.ActivityLevel,
                     DietaryPreferences = user.Profile.DietaryPreferences,
+                    Ethnicity = user.Profile.Ethnicity,
+                    MedicalConditions = user.Profile.MedicalConditions,
+                    Medications = user.Profile.Medications,
                     CoupleProfileId = user.Profile.CoupleProfileId
                 });
             }

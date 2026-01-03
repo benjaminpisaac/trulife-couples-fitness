@@ -6,7 +6,7 @@ namespace TruLife.API.Services
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
-        private const string BaseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+        private const string BaseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent";
         
         public GeminiService(IConfiguration configuration)
         {
@@ -437,9 +437,19 @@ Only return the JSON object, no additional text.";
                 .GetProperty("text")
                 .GetString();
             
-            return text ?? string.Empty;
+            return CleanJsonResponse(text ?? string.Empty);
         }
         
+                private string CleanJsonResponse(string response)
+        {
+            if (string.IsNullOrEmpty(response)) return string.Empty;
+            var cleaned = response.Trim();
+            if (cleaned.StartsWith("`json")) cleaned = cleaned.Substring(7);
+            else if (cleaned.StartsWith("`")) cleaned = cleaned.Substring(3);
+            if (cleaned.EndsWith("`")) cleaned = cleaned.Substring(0, cleaned.Length - 3);
+            return cleaned.Trim();
+        }
+
         private async Task<string> CallGeminiVision(string prompt, string base64Image)
         {
             // Strip base64 prefix if present (e.g. "data:image/jpeg;base64,")
@@ -481,7 +491,7 @@ Only return the JSON object, no additional text.";
                 .GetProperty("text")
                 .GetString();
             
-            return text ?? string.Empty;
+            return CleanJsonResponse(text ?? string.Empty);
         }
         
         public async Task<T?> GenerateContentAsync<T>(string prompt) where T : class

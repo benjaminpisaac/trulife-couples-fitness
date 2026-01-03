@@ -1,4 +1,4 @@
-namespace TruLife.API.DTOs
+﻿namespace TruLife.API.DTOs
 {
     // Additional DTOs for new features
     
@@ -13,6 +13,9 @@ namespace TruLife.API.DTOs
         public string? FitnessGoal { get; set; }
         public string? ActivityLevel { get; set; }
         public string? DietaryPreferences { get; set; }
+        public string? Ethnicity { get; set; }
+        public string? MedicalConditions { get; set; }
+        public string? Medications { get; set; }
     }
     
     // Recovery
