@@ -40,6 +40,9 @@ namespace TruLife.API.DTOs
         public string? FitnessGoal { get; set; }
         public string? ActivityLevel { get; set; }
         public string? DietaryPreferences { get; set; }
+        public string? Ethnicity { get; set; }
+        public string? MedicalConditions { get; set; }
+        public string? Medications { get; set; }
         public int? CoupleProfileId { get; set; }
     }
     
@@ -53,6 +56,9 @@ namespace TruLife.API.DTOs
         public string? FitnessGoal { get; set; }
         public string? ActivityLevel { get; set; }
         public string? DietaryPreferences { get; set; }
+        public string? Ethnicity { get; set; }
+        public string? MedicalConditions { get; set; }
+        public string? Medications { get; set; }
     }
     
     // Readiness DTOs

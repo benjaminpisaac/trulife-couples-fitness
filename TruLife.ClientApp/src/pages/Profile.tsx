@@ -62,17 +62,9 @@ const Profile = () => {
         try {
             const response = await getProfile();
 
-            // Load medical fields from localStorage
-            const ethnicity = localStorage.getItem('userEthnicity') || '';
-            const medicalConditions = localStorage.getItem('userMedicalConditions') || '';
-            const medications = localStorage.getItem('userMedications') || '';
-
-            // Merge backend data with localStorage medical data
+            // Merge backend data
             const profileData = {
-                ...response.data,
-                ethnicity,
-                medicalConditions,
-                medications
+                ...response.data
             };
 
             setProfile(profileData);
@@ -125,11 +117,6 @@ const Profile = () => {
         setLoading(true);
 
         try {
-            // Save medical fields to localStorage (no backend database)
-            localStorage.setItem('userEthnicity', formData.ethnicity || '');
-            localStorage.setItem('userMedicalConditions', formData.medicalConditions || '');
-            localStorage.setItem('userMedications', formData.medications || '');
-
             // Convert imperial to metric before saving
             const dataToSave = { ...formData };
 
@@ -142,16 +129,12 @@ const Profile = () => {
                 dataToSave.targetWeightKg = parseFloat(targetWeightLbs) / 2.20462 || 0;
             }
 
-            // Remove medical fields from backend save (they're in localStorage only)
-            delete dataToSave.ethnicity;
-            delete dataToSave.medicalConditions;
-            delete dataToSave.medications;
-
             await updateProfile(dataToSave);
             await fetchProfile();
             setEditing(false);
             alert('Profile updated successfully!');
         } catch (error) {
+            console.error('Update profile error:', error);
             alert('Failed to update profile. Please try again.');
         } finally {
             setLoading(false);

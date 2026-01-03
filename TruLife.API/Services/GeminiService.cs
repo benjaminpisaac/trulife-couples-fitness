@@ -6,7 +6,7 @@ namespace TruLife.API.Services
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
-        private const string BaseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent";
+        private const string BaseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
         
         public GeminiService(IConfiguration configuration)
         {
@@ -442,6 +442,13 @@ Only return the JSON object, no additional text.";
         
         private async Task<string> CallGeminiVision(string prompt, string base64Image)
         {
+            // Strip base64 prefix if present (e.g. "data:image/jpeg;base64,")
+            var cleanBase64 = base64Image;
+            if (cleanBase64.Contains(","))
+            {
+                cleanBase64 = cleanBase64.Split(',')[1];
+            }
+
             var requestBody = new
             {
                 contents = new[]
@@ -456,7 +463,7 @@ Only return the JSON object, no additional text.";
                                 inline_data = new
                                 {
                                     mime_type = "image/jpeg",
-                                    data = base64Image
+                                    data = cleanBase64
                                 }
                             }
                         }

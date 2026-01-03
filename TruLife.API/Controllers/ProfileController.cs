@@ -64,6 +64,9 @@ namespace TruLife.API.Controllers
                 FitnessGoal = user.Profile.FitnessGoal,
                 ActivityLevel = user.Profile.ActivityLevel,
                 DietaryPreferences = user.Profile.DietaryPreferences,
+                Ethnicity = user.Profile.Ethnicity,
+                MedicalConditions = user.Profile.MedicalConditions,
+                Medications = user.Profile.Medications,
                 CoupleProfileId = user.Profile.CoupleProfileId
             });
         }
@@ -127,6 +130,15 @@ namespace TruLife.API.Controllers
                 
                 if (!string.IsNullOrEmpty(request.DietaryPreferences))
                     user.Profile.DietaryPreferences = request.DietaryPreferences;
+                
+                if (!string.IsNullOrEmpty(request.Ethnicity))
+                    user.Profile.Ethnicity = request.Ethnicity;
+                
+                if (!string.IsNullOrEmpty(request.MedicalConditions))
+                    user.Profile.MedicalConditions = request.MedicalConditions;
+                
+                if (!string.IsNullOrEmpty(request.Medications))
+                    user.Profile.Medications = request.Medications;
                 
                 // CRITICAL: Explicitly save changes
                 var savedEntries = await _context.SaveChangesAsync();
@@ -200,6 +212,9 @@ namespace TruLife.API.Controllers
                 user.Profile.FitnessGoal = request.FitnessGoal;
                 user.Profile.ActivityLevel = request.ActivityLevel;
                 user.Profile.DietaryPreferences = request.DietaryPreferences;
+                user.Profile.Ethnicity = request.Ethnicity;
+                user.Profile.MedicalConditions = request.MedicalConditions;
+                user.Profile.Medications = request.Medications;
                 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();

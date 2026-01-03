@@ -91,7 +91,10 @@ builder.Services.AddCors(options =>
     // Production CORS
     options.AddPolicy("Production", policy =>
     {
-        policy.WithOrigins("https://trulife-couples-fitness.vercel.app")
+        policy.WithOrigins(
+                "https://trulife-couples-fitness.vercel.app",
+                "https://zealous-forest-02570af0f.3.azurestaticapps.net"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
