@@ -1,21 +1,24 @@
+```json
 {
     "navigationFallback": {
         "rewrite": "/index.html",
         "exclude": [
-            "/images/*.{png,jpg,gif}",
-            "/css/*",
-            "/api/*"
+            "/images/*.{png,jpg,gif,svg}",
+            "/assets/*"
         ]
     },
-    "routes": [
-        {
-            "route": "/api/*",
-            "allowedRoles": [
-                "anonymous"
-            ]
-        }
-    ],
+    "routes": [],
+    "mimeTypes": {
+        ".json": "application/json"
+    },
     "globalHeaders": {
-        "content-security-policy": "default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:;"
+        "cache-control": "must-revalidate, max-age=6000"
+    },
+    "responseOverrides": {
+        "404": {
+            "rewrite": "/index.html",
+            "statusCode": 200
+        }
     }
 }
+```
