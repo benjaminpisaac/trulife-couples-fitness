@@ -93,6 +93,8 @@ namespace TruLife.API.DTOs
         public int? EnvironmentId { get; set; }
         public string FitnessGoal { get; set; } = string.Empty;
         public bool UseReadinessScore { get; set; } = true;
+        public string? Location { get; set; }
+        public string? CustomPrompt { get; set; }
     }
     
     public class WorkoutSessionDto

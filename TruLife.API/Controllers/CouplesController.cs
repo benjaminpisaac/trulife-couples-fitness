@@ -6,14 +6,14 @@ using TruLife.API.Models;
 namespace TruLife.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/teamwork")]
     [Authorize]
-    public class CouplesController : ControllerBase
+    public class TeamworkController : ControllerBase
     {
         private readonly CouplesService _couplesService;
         private readonly TransformationAnalysisService _transformationService;
 
-        public CouplesController(CouplesService couplesService, TransformationAnalysisService transformationService)
+        public TeamworkController(CouplesService couplesService, TransformationAnalysisService transformationService)
         {
             _couplesService = couplesService;
             _transformationService = transformationService;

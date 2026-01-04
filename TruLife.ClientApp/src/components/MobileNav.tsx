@@ -15,9 +15,9 @@ const MobileNav = () => {
                 <span className="mobile-nav-icon">🍽️</span>
                 <span>Eat</span>
             </NavLink>
-            <NavLink to="/couples" className="mobile-nav-item">
-                <span className="mobile-nav-icon">💑</span>
-                <span>Couples</span>
+            <NavLink to="/teamwork" className="mobile-nav-item">
+                <span className="mobile-nav-icon">🤝</span>
+                <span>Teamwork</span>
             </NavLink>
             <NavLink to="/profile" className="mobile-nav-item">
                 <span className="mobile-nav-icon">👤</span>

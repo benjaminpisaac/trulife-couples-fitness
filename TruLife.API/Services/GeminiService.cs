@@ -6,7 +6,7 @@ namespace TruLife.API.Services
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
-        private const string BaseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent";
+        private const string BaseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
         
         public GeminiService(IConfiguration configuration)
         {
@@ -59,13 +59,20 @@ Only return the JSON object, no additional text.";
             string fitnessGoal,
             string availableEquipment,
             int readinessScore,
-            string? recentWorkoutHistory = null)
+            string? recentWorkoutHistory = null,
+            string? location = null,
+            string? customPrompt = null)
         {
-            var prompt = $@"Generate a personalized workout plan based on:
+            var prompt = $@"You are a world-class fitness coach and sports science expert. 
+Generate a personalized, science-based workout plan based on the following criteria:
 - Fitness Goal: {fitnessGoal}
+- Primary Location: {location ?? "Not specified"}
 - Available Equipment: {availableEquipment}
 - Readiness Score (1-10): {readinessScore}
+{(customPrompt != null ? $"- Specific User Request: {customPrompt}" : "")}
 {(recentWorkoutHistory != null ? $"- Recent Workout History: {recentWorkoutHistory}" : "")}
+
+Your plan should follow modern exercise science principles (progressive overload, proper volume/intensity balance, and functional movement patterns).
 
 Return a JSON object with this structure:
 {{
@@ -79,14 +86,15 @@ Return a JSON object with this structure:
       ""restSeconds"": seconds,
       ""equipment"": ""required equipment"",
       ""muscleGroup"": ""primary muscle group"",
-      ""notes"": ""form cues or modifications""
+      ""notes"": ""form cues or modifications based on expert knowledge""
     }}
   ],
   ""warmup"": ""warmup instructions"",
   ""cooldown"": ""cooldown instructions""
 }}
 
-Adjust intensity based on readiness score. Only return JSON, no additional text.";
+Adjust intensity and volume based on the readiness score (higher score = more intensity, lower score = more recovery-focused).
+Only return JSON, no additional text.";
             
             return await CallGeminiText(prompt);
         }

@@ -97,10 +97,25 @@ export const getReadinessHistory = (days: number = 30) => api.get(`/readiness/hi
 // Workout
 export const analyzeEnvironment = (base64Image: string) =>
     api.post('/workout/analyze-environment', { base64Image });
-export const generateWorkout = (data: any) => api.post('/workout/generate', data);
+export const generateWorkout = (data: {
+    fitnessGoal: string;
+    environmentId?: number;
+    useReadinessScore?: boolean;
+    location?: string;
+    customPrompt?: string;
+}) => api.post('/workout/generate', data);
 export const getWorkoutSessions = () => api.get('/workout/sessions');
 export const createWorkoutSession = (data: any) => api.post('/workout/sessions', data);
 export const completeWorkoutSession = (id: number) => api.put(`/workout/sessions/${id}/complete`);
+
+// Environment Management
+export const getEnvironments = () => api.get('/workout/environments');
+export const createEnvironment = (data: {
+    name: string;
+    base64Image?: string;
+    manualEquipment?: string;
+}) => api.post('/workout/environments', data);
+export const deleteEnvironment = (id: number) => api.delete(`/workout/environments/${id}`);
 
 // Nutrition
 export const analyzeMeal = (base64Image: string) =>
@@ -119,15 +134,15 @@ export const searchRestaurants = (data: {
 }) => api.post('/restaurant/search', data);
 export const getMealRecommendations = () => api.post('/nutrition/recommendations');
 
-// Couples
+// Teamwork
 export const createCouplePairing = (partnerEmail: string) =>
-    api.post('/couples/pair', { partnerEmail });
-export const getCoupleProfile = () => api.get('/couples/profile');
-export const createChallenge = (data: any) => api.post('/couples/challenges', data);
-export const getChallenges = () => api.get('/couples/challenges');
+    api.post('/teamwork/pair', { partnerEmail });
+export const getCoupleProfile = () => api.get('/teamwork/profile');
+export const createChallenge = (data: any) => api.post('/teamwork/challenges', data);
+export const getChallenges = () => api.get('/teamwork/challenges');
 export const generateRomanticEvening = (data: any) =>
-    api.post('/couples/romantic-evening', data);
-export const getRomanticEvenings = () => api.get('/couples/romantic-evenings');
+    api.post('/teamwork/romantic-evening', data);
+export const getRomanticEvenings = () => api.get('/teamwork/romantic-evenings');
 
 export default api;
 

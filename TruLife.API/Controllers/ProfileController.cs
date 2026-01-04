@@ -67,9 +67,6 @@ namespace TruLife.API.Controllers
                     Ethnicity = user.Profile.Ethnicity,
                     MedicalConditions = user.Profile.MedicalConditions,
                     Medications = user.Profile.Medications,
-                Ethnicity = user.Profile.Ethnicity,
-                MedicalConditions = user.Profile.MedicalConditions,
-                Medications = user.Profile.Medications,
                 CoupleProfileId = user.Profile.CoupleProfileId
             });
         }

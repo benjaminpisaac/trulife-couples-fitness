@@ -126,7 +126,7 @@ const Eat = () => {
                             className={`btn ${mode === 'couples' ? 'btn-secondary' : 'btn-outline'} flex-1`}
                             onClick={() => setMode('couples')}
                         >
-                            Couples Mode
+                            Teamwork Mode
                         </button>
                     </div>
                 </div>
@@ -255,28 +255,28 @@ const Eat = () => {
                     </>
                 ) : (
                     <div className="card">
-                        <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Couples Nutrition</h2>
+                        <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Teamwork Nutrition</h2>
                         <p className="text-gray mb-3">
-                            Share meals, create nutrition challenges, or plan romantic dinners together!
+                            Share meals, create nutrition challenges, or plan healthy dinners together!
                         </p>
                         <div className="flex flex-col gap-2">
                             <button
                                 className="btn btn-secondary"
-                                onClick={() => window.location.href = '/couples'}
+                                onClick={() => window.location.href = '/teamwork'}
                             >
-                                💑 Plan Romantic Dinner
+                                🤝 Plan Team/Date Dinner
                             </button>
                             <button
                                 className="btn btn-outline"
-                                onClick={() => window.location.href = '/couples'}
+                                onClick={() => window.location.href = '/teamwork'}
                             >
-                                Create Nutrition Challenge
+                                Create Shared Challenge
                             </button>
                             <button
                                 className="btn btn-outline"
-                                onClick={() => alert('View your partner\'s meal history and nutrition stats! Feature coming soon 🍽️')}
+                                onClick={() => alert('View your partner\'s/teammate\'s meal history and nutrition stats! Feature coming soon 🍽️')}
                             >
-                                View Partner's Meals
+                                View Teammate's Meals
                             </button>
                         </div>
                     </div>

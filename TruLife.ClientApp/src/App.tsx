@@ -28,7 +28,7 @@ function App() {
                 <Route path="/today" element={isAuthenticated ? <Today /> : <Navigate to="/login" />} />
                 <Route path="/train" element={isAuthenticated ? <Train /> : <Navigate to="/login" />} />
                 <Route path="/eat" element={isAuthenticated ? <Eat /> : <Navigate to="/login" />} />
-                <Route path="/couples" element={isAuthenticated ? <Couples /> : <Navigate to="/login" />} />
+                <Route path="/teamwork" element={isAuthenticated ? <Couples /> : <Navigate to="/login" />} />
                 <Route path="/dna" element={isAuthenticated ? <DNA /> : <Navigate to="/login" />} />
                 <Route path="/labs" element={isAuthenticated ? <Labs /> : <Navigate to="/login" />} />
                 <Route path="/recovery" element={isAuthenticated ? <Recovery /> : <Navigate to="/login" />} />

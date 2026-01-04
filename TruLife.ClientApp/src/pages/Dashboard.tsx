@@ -125,8 +125,8 @@ const Dashboard = () => {
                         <Link to="/eat" className="btn btn-secondary">
                             🍽️ Log Meal
                         </Link>
-                        <Link to="/couples" className="btn btn-outline">
-                            💑 Couples Mode
+                        <Link to="/teamwork" className="btn btn-outline">
+                            🤝 Teamwork
                         </Link>
                         <Link to="/profile" className="btn btn-outline">
                             ⚙️ Settings
@@ -217,8 +217,8 @@ const Dashboard = () => {
                             <div className="text-gray text-sm">Snap a photo of your meal and get instant macro estimates</div>
                         </div>
                         <div style={{ padding: '1rem', background: '#f3f4f6', borderRadius: '8px' }}>
-                            <div style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.25rem' }}>💑 Couples Mode</div>
-                            <div className="text-gray text-sm">Create challenges and romantic date nights with your partner</div>
+                            <div style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.25rem' }}>🤝 Teamwork Mode</div>
+                            <div className="text-gray text-sm">Create challenges and shared activities with your partner or teammate</div>
                         </div>
                     </div>
                 </div>

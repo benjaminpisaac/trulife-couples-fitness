@@ -116,7 +116,9 @@ namespace TruLife.API.Controllers
                     request.FitnessGoal,
                     availableEquipment,
                     readinessScore,
-                    workoutHistory
+                    workoutHistory,
+                    request.Location,
+                    request.CustomPrompt
                 );
                 
                 return Ok(new { workout = workoutJson });
@@ -197,6 +199,92 @@ namespace TruLife.API.Controllers
             await _context.SaveChangesAsync();
             
             return Ok(new { message = "Workout completed!" });
+        }
+        
+        [HttpGet("environments")]
+        public async Task<ActionResult> GetEnvironments()
+        {
+            var userId = _authService.GetUserIdFromToken(User);
+            if (userId == null) return Unauthorized();
+            
+            var environments = await _context.Environments
+                .Where(e => e.UserId == userId)
+                .OrderByDescending(e => e.CreatedAt)
+                .Select(e => new
+                {
+                    id = e.Id,
+                    name = e.Name,
+                    photoUrl = e.PhotoUrl,
+                    availableEquipment = e.AvailableEquipment,
+                    createdAt = e.CreatedAt
+                })
+                .ToListAsync();
+            
+            return Ok(environments);
+        }
+        
+        [HttpPost("environments")]
+        public async Task<ActionResult> CreateEnvironment([FromBody] CreateEnvironmentRequest request)
+        {
+            var userId = _authService.GetUserIdFromToken(User);
+            if (userId == null) return Unauthorized();
+            
+            try
+            {
+                // Analyze the image if provided
+                string? equipmentJson = null;
+                string? photoUrl = null;
+                
+                if (!string.IsNullOrEmpty(request.Base64Image))
+                {
+                    equipmentJson = await _geminiService.AnalyzeEquipmentFromPhoto(request.Base64Image);
+                    
+                    // TODO: Upload image to blob storage and get URL
+                    // For now, we'll store a placeholder or the base64 (not recommended for production)
+                    photoUrl = "data:image/jpeg;base64," + request.Base64Image.Substring(0, Math.Min(100, request.Base64Image.Length)) + "...";
+                }
+                
+                var environment = new Models.Environment
+                {
+                    UserId = userId.Value,
+                    Name = request.Name,
+                    PhotoUrl = photoUrl,
+                    AvailableEquipment = equipmentJson ?? request.ManualEquipment ?? "[]"
+                };
+                
+                _context.Environments.Add(environment);
+                await _context.SaveChangesAsync();
+                
+                return Ok(new
+                {
+                    id = environment.Id,
+                    name = environment.Name,
+                    photoUrl = environment.PhotoUrl,
+                    availableEquipment = environment.AvailableEquipment,
+                    createdAt = environment.CreatedAt
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Failed to create environment", error = ex.Message });
+            }
+        }
+        
+        [HttpDelete("environments/{id}")]
+        public async Task<ActionResult> DeleteEnvironment(int id)
+        {
+            var userId = _authService.GetUserIdFromToken(User);
+            if (userId == null) return Unauthorized();
+            
+            var environment = await _context.Environments
+                .FirstOrDefaultAsync(e => e.Id == id && e.UserId == userId);
+            
+            if (environment == null) return NotFound();
+            
+            _context.Environments.Remove(environment);
+            await _context.SaveChangesAsync();
+            
+            return Ok(new { message = "Environment deleted successfully" });
         }
     }
 }

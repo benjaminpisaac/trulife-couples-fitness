@@ -87,6 +87,13 @@
         public string? Notes { get; set; }
     }
     
+    public class CreateEnvironmentRequest
+    {
+        public string Name { get; set; } = string.Empty;
+        public string? Base64Image { get; set; }
+        public string? ManualEquipment { get; set; }
+    }
+    
     // Workout Programs
     public class WorkoutProgramDto
     {
